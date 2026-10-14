@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AnyVR Destinations</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      font-family: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+      background: radial-gradient(70% 100% at 50% 0%, #172338 0%, #060a12 72%);
+      color: #f2f4f8;
+      overflow: hidden;
+    }
+    .stage {
+      position: relative;
+      width: min(96%, 560px);
+      aspect-ratio: 16 / 10;
+      perspective: 1000px;
+    }
+    .deck {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      animation: spin 14s linear infinite;
+    }
+    .card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 160px;
+      height: 190px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: linear-gradient(150deg, rgba(255,255,255,0.2), rgba(255,255,255,0.03));
+      backdrop-filter: blur(8px);
+      transform-style: preserve-3d;
+      display: grid;
+      place-content: center;
+      text-align: center;
+      gap: 8px;
+      box-shadow: 0 16px 30px rgba(0,0,0,0.35);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .card b { font-size: 1.05rem; letter-spacing: 0.02em; }
+    .card span { color: #b5bfd0; font-size: 0.85rem; }
+    .a { transform: translate(-50%, -50%) rotateY(0deg) translateZ(220px); }
+    .b { transform: translate(-50%, -50%) rotateY(120deg) translateZ(220px); }
+    .c { transform: translate(-50%, -50%) rotateY(240deg) translateZ(220px); }
+    .card:hover {
+      border-color: rgba(255,120,71,0.9);
+      transform: translate(-50%, -50%) scale(1.08) translateZ(220px);
+    }
+    @keyframes spin { to { transform: rotateY(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="stage" aria-label="Three destinations on a rotating turntable">
+    <div class="deck">
+      <article class="card a"><b>Taj Mahal</b><span>Agra</span></article>
+      <article class="card b"><b>Eiffel Tower</b><span>Paris</span></article>
+      <article class="card c"><b>Pyramids</b><span>Giza</span></article>
+    </div>
+  </div>
+</body>
+</html>

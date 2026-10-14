@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AnyVR | Immersive VR Monument Tours</title>
+  <meta name="description" content="A fully 3D scroll journey by AnyVR. Wear the headset, teleport across the world, and explore Taj Mahal, Eiffel Tower, and the Pyramids of Giza." />
+  <meta name="theme-color" content="#0a0b0e" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:title" content="AnyVR" />
+  <meta property="og:description" content="Step inside the world's wonders with an AI guide." />
+</head>
+<body>
+  <a class="skip" href="#why">Skip the tour</a>
+
+  <header class="nav" data-nav>
+    <a class="brand" href="#top" aria-label="AnyVR home">
+      <svg class="brand-mark" viewBox="0 0 40 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="28" cy="12" r="9" /></svg>
+      <span>AnyVR</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#story">Tour</a>
+      <a href="#guide">Guide</a>
+      <a href="#how">How it works</a>
+      <a href="#team">Team</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#contact">
+      <i class="ph-bold ph-calendar-plus" aria-hidden="true"></i> Book Demo
+    </a>
+  </header>
+
+  <canvas class="gl" id="gl" aria-hidden="true"></canvas>
+
+  <main id="top">
+    <!-- The scroll-driven story. The canvas behind is pinned; everything here is an overlay. -->
+    <section class="story" id="story" aria-label="Tour: putting on the headset and visiting three monuments">
+      <div class="story-pin">
+
+        <div class="hero" data-show="-1,0.055">
+          <h1 class="hero-title">The world's wonders, one headset away.</h1>
+          <p class="hero-sub">Scroll to wear the headset, enter the portal, and visit world monuments in a continuous 3D story.</p>
+          <div class="hero-ctas">
+            <button class="btn btn-primary" type="button" data-scroll-to="0.2"><i class="ph-bold ph-play" aria-hidden="true"></i> Start Journey</button>
+            <button class="btn btn-ghost" type="button" data-scroll-to="0.2">Take the tour <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></button>
+          </div>
+        </div>
+
+        <div class="pins" data-show="-1,0.05" aria-hidden="true">
+          <span class="pin" data-pin="home">Phagwara</span>
+          <span class="pin" data-pin="agra">Agra</span>
+          <span class="pin" data-pin="paris">Paris</span>
+          <span class="pin" data-pin="giza">Giza</span>
+        </div>
+
+        <div class="scroll-cue" data-show="-1,0.03" aria-hidden="true"><span></span>Scroll</div>
+
+        <div class="cap cap-left" data-show="0.15,0.265">
+          <h2>One headset. Every horizon.</h2>
+          <p>From city landmarks to ancient wonders, move through real-scale spaces without leaving the classroom.</p>
+        </div>
+
+        <div class="cap cap-wear" data-show="0.27,0.35">
+          <h2>Put it on.</h2>
+        </div>
+
+        <div class="hud" data-show="0.425,0.552">
+          <div class="hud-guide">
+            <span class="orb" aria-hidden="true"></span>
+            <p>Hi, I'm your guide. Where should we go first?</p>
+          </div>
+          <ul class="hud-list">
+            <li data-pick="0.49"><strong>Taj Mahal</strong><span>Agra, India</span></li>
+            <li><strong>Eiffel Tower</strong><span>Paris, France</span></li>
+            <li><strong>Pyramids of Giza</strong><span>Giza, Egypt</span></li>
+          </ul>
+        </div>
+
+        <article class="card" data-show="0.585,0.7">
+          <header><h3>Taj Mahal</h3><span>Agra, India</span></header>
+          <p>Shah Jahan built it in memory of Mumtaz Mahal between 1632 and 1653. The white marble turns pink at sunrise.</p>
+          <div class="hello"><span class="hello-lang">Hindi</span><span class="hello-word" lang="hi">नमस्ते</span><span class="hello-say">namaste, hello</span></div>
+        </article>
+
+        <article class="card" data-show="0.735,0.84">
+          <header><h3>Eiffel Tower</h3><span>Paris, France</span></header>
+          <p>Opened for the 1889 World's Fair. About 18,000 iron parts, held together by 2.5 million rivets.</p>
+          <div class="hello"><span class="hello-lang">French</span><span class="hello-word" lang="fr">Bonjour</span><span class="hello-say">hello</span></div>
+        </article>
+
+        <article class="card" data-show="0.875,0.95">
+          <header><h3>Pyramids of Giza</h3><span>Giza, Egypt</span></header>
+          <p>Khufu's pyramid was the tallest structure people had built for roughly 3,800 years.</p>
+          <div class="hello"><span class="hello-lang">Arabic</span><span class="hello-word" lang="ar" dir="rtl">مرحبا</span><span class="hello-say">marhaban, hello</span></div>
+        </article>
+
+        <div class="trip" data-show="0.57,0.955" aria-hidden="true">
+          <span data-trip="0.56">Agra</span>
+          <span data-trip="0.71">Paris</span>
+          <span data-trip="0.85">Giza</span>
+        </div>
+
+        <div class="cap cap-end" data-show="0.958,1.2">
+          <h2>Three countries. One lesson.</h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="why section" id="why">
+      <div class="wrap">
+        <h2 class="h-xl" data-reveal>Learning changes when place becomes experience.</h2>
+        <div class="pairs">
+          <div class="pair" data-reveal style="--i:0">
+            <p class="pair-q"><i class="ph-bold ph-map-trifold" aria-hidden="true"></i>Most learners only see monuments as flat pictures.</p>
+            <p class="pair-a">Every student in the class can stand in front of one.</p>
+          </div>
+          <div class="pair" data-reveal style="--i:1">
+            <p class="pair-q"><i class="ph-bold ph-airplane-tilt" aria-hidden="true"></i>Physical trips are limited by cost, distance and logistics.</p>
+            <p class="pair-a">A tour fits inside one lesson. No tickets, no bus.</p>
+          </div>
+          <div class="pair" data-reveal style="--i:2">
+            <p class="pair-q"><i class="ph-bold ph-book-open" aria-hidden="true"></i>Text alone cannot teach scale, atmosphere, or cultural context.</p>
+            <p class="pair-a">Students look around, ask out loud, and hear answers in the local language.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide section" id="guide">
+      <div class="wrap guide-grid">
+        <div class="guide-copy" data-reveal>
+          <h2 class="h-lg">An AI guide that feels present.</h2>
+          <p class="lede">Choose how your guide sounds. It tells the stories, answers questions, and teaches a few words of the local language as you walk.</p>
+          <form class="guide-form" data-guide-form>
+            <fieldset>
+              <legend>Personality</legend>
+              <div class="seg">
+                <label><input type="radio" name="persona" value="story" checked /><span>Storyteller</span></label>
+                <label><input type="radio" name="persona" value="history" /><span>Historian</span></label>
+                <label><input type="radio" name="persona" value="friend" /><span>Friend</span></label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Language</legend>
+              <div class="seg">
+                <label><input type="radio" name="lang" value="en" checked /><span>English</span></label>
+                <label><input type="radio" name="lang" value="hi" /><span>Hindi</span></label>
+                <label><input type="radio" name="lang" value="fr" /><span>French</span></label>
+                <label><input type="radio" name="lang" value="ar" /><span>Arabic</span></label>
+                <label><input type="radio" name="lang" value="es" /><span>Spanish</span></label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Voice</legend>
+              <div class="seg">
+                <label><input type="radio" name="voice" value="warm" checked /><span>Warm</span></label>
+                <label><input type="radio" name="voice" value="bright" /><span>Bright</span></label>
+                <label><input type="radio" name="voice" value="calm" /><span>Calm</span></label>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="guide-out" data-reveal style="--i:1" aria-live="polite">
+          <div class="guide-head">
+            <span class="orb orb-lg" aria-hidden="true"></span>
+            <div><strong>Your guide</strong><span data-guide-meta>Storyteller, warm voice</span></div>
+          </div>
+          <p class="guide-where">At the Taj Mahal</p>
+          <p class="guide-hello" data-guide-hello>Welcome to the Taj Mahal.</p>
+          <p class="guide-line" data-guide-line></p>
+          <div class="wave" data-wave aria-hidden="true"></div>
+          <button class="btn btn-ghost btn-sm" type="button" data-speak hidden><i class="ph-bold ph-speaker-high" aria-hidden="true"></i> Hear it</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="how section" id="how">
+      <div class="wrap how-grid">
+        <div>
+          <h2 class="h-lg" data-reveal>From headset to monument in three steps.</h2>
+          <ol class="steps">
+            <li data-reveal style="--i:0"><h3>Wear the headset</h3><p>The landing narrative transitions from screen mode into immersive view.</p></li>
+            <li data-reveal style="--i:1"><h3>Choose a destination</h3><p>Pick a monument and jump instantly into a real-scale 3D environment.</p></li>
+            <li data-reveal style="--i:2"><h3>Explore with your guide</h3><p>Move through the scene, ask questions, and learn facts in context.</p></li>
+          </ol>
+        </div>
+        <figure class="figure" data-reveal style="--i:1">
+          <iframe src="/destinations.html" title="Three destinations on a turntable. Point at one to pick it." loading="lazy"></iframe>
+          <figcaption>Point at a destination to pick it.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="features section" id="features">
+      <div class="wrap">
+        <h2 class="h-lg" data-reveal>Built for the classroom.</h2>
+        <div class="bento">
+          <article class="tile tile-a" data-reveal style="--i:0">
+            <img src="/stills/taj.svg" alt="The Taj Mahal at sunrise, seen down its reflecting pool" loading="lazy" />
+            <div class="tile-copy"><h3>Tours with a guide beside you</h3><p>Ask about anything you see. The guide answers like a real tour guide would.</p></div>
+          </article>
+          <article class="tile tile-b" data-reveal style="--i:1">
+            <img src="/stills/eiffel.svg" alt="The Eiffel Tower lit gold at dusk" loading="lazy" />
+            <div class="tile-copy"><h3>Learn the language on location</h3><p>Hear greetings where they are spoken, then say them back.</p></div>
+          </article>
+          <article class="tile tile-c" data-reveal style="--i:2">
+            <i class="ph-bold ph-users-three tile-icon" aria-hidden="true"></i>
+            <div class="tile-copy"><h3>One lesson, the whole class</h3><p>Tours run for many students and schools without extra cost per visit.</p></div>
+          </article>
+          <article class="tile tile-d" data-reveal style="--i:3">
+            <img src="/stills/giza.svg" alt="The three pyramids of Giza in afternoon light" loading="lazy" />
+            <div class="tile-copy"><h3>History and geography, firsthand</h3><p>Walk around a pyramid instead of reading its height off a page.</p></div>
+          </article>
+          <article class="tile tile-e" data-reveal style="--i:4">
+            <div class="tile-copy"><h3>Made with schools</h3><p>We partner with institutions to fit tours into the curriculum they already teach.</p></div>
+            <i class="ph-bold ph-graduation-cap tile-icon" aria-hidden="true"></i>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="next section" id="next">
+      <div class="wrap">
+        <h2 class="h-lg" data-reveal>Where we are going next.</h2>
+        <ul class="next-list">
+          <li data-reveal style="--i:0"><span class="next-name">The deep ocean</span><span class="next-note">Reefs and wrecks, built with marine experts.</span></li>
+          <li data-reveal style="--i:1"><span class="next-name">The space station</span><span class="next-note">Float through the modules in orbit.</span></li>
+          <li data-reveal style="--i:2"><span class="next-name">Tours with classmates</span><span class="next-note">Explore together, with the guide leading the discussion.</span></li>
+        </ul>
+        <p class="next-foot" data-reveal>New sites are built with historians and archaeologists.</p>
+      </div>
+    </section>
+
+    <section class="stack section" id="stack" aria-labelledby="stack-h">
+      <div class="wrap">
+        <h2 class="h-sm" id="stack-h" data-reveal>Built with</h2>
+        <ul class="logos" data-logos data-reveal></ul>
+      </div>
+    </section>
+
+    <section class="team section" id="team">
+      <div class="wrap team-grid">
+        <div data-reveal>
+          <h2 class="h-lg">Made by Gurnoor Singh Saini.</h2>
+          <p class="lede">Independently designed and developed as an immersive VR-first storytelling platform for education, tourism, and interactive learning.</p>
+        </div>
+        <ul class="names">
+          <li data-reveal style="--i:0">Gurnoor Singh Saini</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cta section" id="contact">
+      <div class="wrap cta-inner" data-reveal>
+        <h2 class="h-xl">Ready to launch immersive tours?</h2>
+        <p class="lede">Bring AnyVR to your institution, event, or product experience.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="mailto:hello@anyvr.world"><i class="ph-bold ph-envelope-simple" aria-hidden="true"></i> hello@anyvr.world</a>
+          <a class="btn btn-ghost" href="#story"><i class="ph-bold ph-rocket-launch" aria-hidden="true"></i> Replay Tour</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span>AnyVR immersive landing experience</span>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
