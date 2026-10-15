@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { CameraPath, beamMatrix, dotTexture, makeSky, rng, sunLight } from './util.js';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { pbr, scanned, triplanar } from './textures.js';
 
 /**
  * The Eiffel Tower as an iron lattice: four legs that curve inward and merge
@@ -43,6 +45,8 @@ export function buildEiffel(mat) {
   const g = new THREE.Group();
   const mats = [];
   const add = (a, b, t) => mats.push(beamMatrix(a, b, t).clone());
+  const chords = [], plates = [], rivets = [];
+  const detail = new THREE.Object3D();
 
   const hs = [...levels(0, H2, 6.4), ...levels(H2 + 8, 300, 8.4)];
   for (let i = 0; i < hs.length - 1; i++) {
@@ -52,12 +56,26 @@ export function buildEiffel(mat) {
     const chord = upper ? 1.1 : 1.6, brace = upper ? 0.45 : 0.6;
     for (let k = 0; k < A.length; k++) {
       const ra = A[k], rb = B[k];
+      const center = ra.reduce((sum, p) => sum.add(p), new THREE.Vector3()).multiplyScalar(0.25);
       for (let c = 0; c < 4; c++) {
         const c2 = (c + 1) % 4;
-        add(ra[c], rb[c], chord);
+        chords.push(beamMatrix(ra[c], rb[c], chord).clone());
         add(ra[c], rb[c2], brace);
         add(ra[c2], rb[c], brace);
         if (i % 2 === 0) add(ra[c], ra[c2], brace * 0.8);
+        const normal = ra[c].clone().sub(center).normalize();
+        detail.position.copy(ra[c]).addScaledVector(normal, chord * 0.52);
+        detail.rotation.set(0, Math.atan2(normal.x, normal.z), 0);
+        detail.scale.set(chord * 1.1, chord * 1.6, 0.14);
+        detail.updateMatrix();
+        plates.push(detail.matrix.clone());
+        for (const offset of [-0.43, 0.43]) {
+          detail.position.copy(ra[c]).addScaledVector(normal, chord * 0.62);
+          detail.position.y += offset * chord;
+          detail.scale.setScalar(upper ? 0.1 : 0.14);
+          detail.updateMatrix();
+          rivets.push(detail.matrix.clone());
+        }
       }
     }
   }
@@ -71,37 +89,73 @@ export function buildEiffel(mat) {
     add(leg[3], c, 0.6);
   }
 
-  const geo = new THREE.BoxGeometry(1, 1, 1);
-  const lattice = new THREE.InstancedMesh(geo, mat, mats.length);
-  mats.forEach((m, i) => lattice.setMatrixAt(i, m));
-  lattice.castShadow = true;
-  g.add(lattice);
-
   // ornamental arches between the legs
   for (let i = 0; i < 4; i++) {
     const a = (i * Math.PI) / 2;
-    const arch = new THREE.Mesh(new THREE.TorusGeometry(37, 1.3, 6, 48, Math.PI), mat);
-    arch.scale.set(1, 1.02, 1);
-    arch.position.set(Math.sin(a) * 50, 1, Math.cos(a) * 50);
-    arch.rotation.y = a;
-    arch.rotation.x = -0.12;
-    g.add(arch);
+    const point = (angle, radius) => new THREE.Vector3(
+      Math.sin(a) * 50 + Math.cos(a) * Math.cos(angle) * radius,
+      1 + Math.sin(angle) * radius,
+      Math.cos(a) * 50 - Math.sin(a) * Math.cos(angle) * radius,
+    );
+    for (let j = 0; j < 32; j++) {
+      const t0 = j * Math.PI / 32, t1 = (j + 1) * Math.PI / 32;
+      add(point(t0, 37), point(t1, 37), 0.65);
+      add(point(t0, 40), point(t1, 40), 0.65);
+      add(point(t0, 37), point(t0, 40), 0.28);
+      add(point(t0, j % 2 ? 37 : 40), point(t1, j % 2 ? 40 : 37), 0.22);
+    }
   }
 
   // platforms
   const deck = (h, half, t) => {
-    const d = new THREE.Mesh(new THREE.BoxGeometry(half * 2, t, half * 2), mat);
-    d.position.y = h;
+    const d = new THREE.Mesh(new THREE.BoxGeometry(half * 2, 0.65, half * 2), mat);
+    d.position.y = h + t / 2 - 0.325;
     d.castShadow = true;
     g.add(d);
-    const rail = new THREE.Mesh(new THREE.BoxGeometry(half * 2 + 2, 1.2, half * 2 + 2), mat);
-    rail.position.y = h + t / 2 + 0.6;
-    rail.scale.set(1, 1, 1);
-    g.add(rail);
+    for (let face = 0; face < 4; face++) {
+      const a = face * Math.PI / 2;
+      const point = (x, y) => new THREE.Vector3(
+        Math.cos(a) * x + Math.sin(a) * half, y,
+        -Math.sin(a) * x + Math.cos(a) * half,
+      );
+      const floor = h + t / 2;
+      for (const y of [floor + 0.65, floor + 1.35]) add(point(-half, y), point(half, y), 0.13);
+      for (const y of [h - t / 2, floor - 0.65]) add(point(-half, y), point(half, y), 0.45);
+      const bays = Math.ceil(half * 2 / 3);
+      for (let j = 0; j <= bays; j++) {
+        const x = -half + j * half * 2 / bays;
+        add(point(x, floor), point(x, floor + 1.35), 0.11);
+        if (j < bays) {
+          const next = -half + (j + 1) * half * 2 / bays;
+          add(point(x, h - t / 2), point(next, floor - 0.65), 0.2);
+          add(point(next, h - t / 2), point(x, floor - 0.65), 0.2);
+        }
+      }
+    }
   };
   deck(57, w(57) + 4, 5);
   deck(H2, w(H2) + 2.5, 3.5);
   deck(276, w(276) + 1.6, 3);
+  const flanges = [
+    new THREE.BoxGeometry(1, 1, 0.18).translate(0, 0, -0.41),
+    new THREE.BoxGeometry(1, 1, 0.18).translate(0, 0, 0.41),
+    new THREE.BoxGeometry(0.18, 1, 0.64),
+  ];
+  const chordGeometry = mergeGeometries(flanges);
+  flanges.forEach((geometry) => geometry.dispose());
+  for (const [name, geometry, matrices] of [
+    ['lattice-and-railings', new THREE.BoxGeometry(1, 1, 1), mats],
+    ['flanged-chords', chordGeometry, chords],
+    ['gusset-plates', new THREE.BoxGeometry(1, 1, 1), plates],
+    ['rivet-heads', new THREE.OctahedronGeometry(1), rivets],
+  ]) {
+    const mesh = new THREE.InstancedMesh(geometry, mat, matrices.length);
+    mesh.name = name;
+    matrices.forEach((matrix, i) => mesh.setMatrixAt(i, matrix));
+    mesh.castShadow = name !== 'rivet-heads';
+    mesh.receiveShadow = true;
+    g.add(mesh);
+  }
   const lantern = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 4.4, 20, 8), mat);
   lantern.position.y = 289;
   const dome = new THREE.Mesh(new THREE.SphereGeometry(3.2, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), mat);
@@ -109,7 +163,7 @@ export function buildEiffel(mat) {
   const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.9, 32, 8), mat);
   antenna.position.y = 314;
   g.add(lantern, dome, antenna);
-  return { group: g, beams: mats.length };
+  return { group: g, beams: mats.length + chords.length };
 }
 
 /** Twinkling bulbs scattered over the lattice, like the tower's hourly sparkle. */
@@ -157,8 +211,35 @@ export function createEiffel(renderer) {
   scene.add(new THREE.HemisphereLight(0x8a9bd6, 0x2c2a2a, 0.5));
 
   const iron = new THREE.MeshStandardMaterial({
-    color: 0x6b4c34, metalness: 0.55, roughness: 0.5, emissive: 0xff8a3c, emissiveIntensity: 0.18,
+    ...pbr('rusty_painted_metal'), color: 0x8a7462,
+    metalness: 0.55, roughness: 0.6, emissive: 0xffa04a, emissiveIntensity: 0.95,
   });
+  // Approximate the installed uplights on iron only, without lighting the city or sky.
+  iron.onBeforeCompile = (shader) => {
+    shader.vertexShader = 'varying float vTowerHeight;\n' + shader.vertexShader;
+    shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', `
+      #include <begin_vertex>
+      vec4 towerPosition = vec4(transformed, 1.0);
+      #ifdef USE_INSTANCING
+        towerPosition = instanceMatrix * towerPosition;
+      #endif
+      vTowerHeight = (modelMatrix * towerPosition).y;
+    `);
+    shader.fragmentShader = 'varying float vTowerHeight;\n' + shader.fragmentShader;
+    shader.fragmentShader = shader.fragmentShader.replace('#include <emissivemap_fragment>', `
+      #include <emissivemap_fragment>
+      vec3 upView = normalize((viewMatrix * vec4(0.0, 1.0, 0.0, 0.0)).xyz);
+      float underside = max(dot(normal, -upView), 0.0);
+      float flood = exp(-abs(vTowerHeight - 12.0) / 32.0)
+        + exp(-abs(vTowerHeight - 65.0) / 26.0)
+        + exp(-abs(vTowerHeight - 123.0) / 44.0)
+        + exp(-abs(vTowerHeight - 280.0) / 30.0);
+      totalEmissiveRadiance *= (0.12 + 0.42 * flood + 0.65 * underside)
+        * (0.55 + 0.45 * diffuseColor.r);
+    `);
+  };
+  // painted puddle iron: a scanned painted-metal set, tinted Eiffel brown
+  triplanar(iron, { scale: 0.6, normalScale: 0.8 });
   const tower = buildEiffel(iron);
   scene.add(tower.group);
 
@@ -166,10 +247,28 @@ export function createEiffel(renderer) {
   scene.add(spark);
 
   // the two rotating beacon beams from the top
-  const beamGeo = new THREE.ConeGeometry(16, 1400, 24, 1, true);
-  beamGeo.translate(0, -700, 0);
+  const beamGeo = new THREE.ConeGeometry(10, 850, 24, 1, true);
+  beamGeo.translate(0, -425, 0);
   beamGeo.rotateZ(Math.PI / 2);
-  const beamMat = new THREE.MeshBasicMaterial({ color: 0xfff1d0, transparent: true, opacity: 0.05, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+  const beamMat = new THREE.ShaderMaterial({
+    transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+    vertexShader: /* glsl */ `
+      varying vec2 vUv; varying vec3 vNormal; varying vec3 vEye;
+      void main() {
+        vUv = uv;
+        vec4 p = modelViewMatrix * vec4(position, 1.0);
+        vNormal = normalize(normalMatrix * normal);
+        vEye = -p.xyz;
+        gl_Position = projectionMatrix * p;
+      }`,
+    fragmentShader: /* glsl */ `
+      varying vec2 vUv; varying vec3 vNormal; varying vec3 vEye;
+      void main() {
+        float edge = pow(abs(dot(normalize(vNormal), normalize(vEye))), 2.0);
+        float fade = smoothstep(0.0, 0.65, vUv.y) * (1.0 - smoothstep(0.92, 1.0, vUv.y));
+        gl_FragColor = vec4(0.65, 0.78, 1.0, edge * fade * 0.035);
+      }`,
+  });
   const beacon = new THREE.Group();
   const b1 = new THREE.Mesh(beamGeo, beamMat), b2 = new THREE.Mesh(beamGeo, beamMat);
   b2.rotation.y = Math.PI;
@@ -181,8 +280,8 @@ export function createEiffel(renderer) {
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000), new THREE.MeshStandardMaterial({ color: 0x5b5148, roughness: 1 }));
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
-  const grass = new THREE.MeshStandardMaterial({ color: 0x3f5634, roughness: 1 });
-  const gravel = new THREE.MeshStandardMaterial({ color: 0xb4a184, roughness: 1 });
+  const grass = scanned('leafy_grass', { color: 0x9aa884, roughness: 1 }, { scale: 0.3, macro: 0.6 });
+  const gravel = scanned('gravel_floor', { color: 0xe8dcc6, roughness: 1 }, { scale: 0.4, macro: 0.4 });
   const plaza = new THREE.Mesh(new THREE.BoxGeometry(220, 0.2, 220), gravel);
   plaza.position.y = 0.1;
   scene.add(ground, plaza);
@@ -195,8 +294,36 @@ export function createEiffel(renderer) {
 
   const r = rng(21), o = new THREE.Object3D();
   const N = 1400;
-  const city = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0xd1c3a8, roughness: 0.9 }), N);
-  const roofs = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0x5b6470, roughness: 0.6, metalness: 0.3 }), N);
+  // Haussmann blocks: limestone walls with a window grid drawn in world space,
+  // so every block keeps square windows whatever its size; some are lit at dusk
+  const facade = new THREE.MeshStandardMaterial({ color: 0xcfc1a6, roughness: 0.88, emissive: 0xffb36b, emissiveIntensity: 1 });
+  facade.onBeforeCompile = (shader) => {
+    shader.vertexShader = `varying vec3 vCityPos;
+varying vec3 vCityNormal;
+` + shader.vertexShader.replace('#include <begin_vertex>', `
+      #include <begin_vertex>
+      vec4 cityPos = instanceMatrix * vec4(transformed, 1.0);
+      vCityPos = (modelMatrix * cityPos).xyz;
+      vCityNormal = normalize(mat3(modelMatrix) * mat3(instanceMatrix) * objectNormal);
+    `);
+    shader.fragmentShader = `varying vec3 vCityPos;
+varying vec3 vCityNormal;
+float cityHash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+`
+      + shader.fragmentShader.replace('#include <emissivemap_fragment>', `
+      #include <emissivemap_fragment>
+      float side = abs(vCityNormal.y) < 0.5 ? 1.0 : 0.0;
+      float u = abs(vCityNormal.x) > abs(vCityNormal.z) ? vCityPos.z : vCityPos.x;
+      vec2 cell = vec2(u / 3.6, (vCityPos.y - 1.5) / 3.2);
+      vec2 f = fract(cell);
+      float win = side * step(0.28, f.x) * step(f.x, 0.72) * step(0.25, f.y) * step(f.y, 0.82) * step(1.0, vCityPos.y);
+      float lit = step(0.7, cityHash(floor(cell) + floor(vCityPos.xz / 40.0)));
+      diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.09, 0.1, 0.12), win);
+      totalEmissiveRadiance *= win * lit * (0.6 + 0.4 * cityHash(floor(cell) * 1.7));
+    `);
+  };
+  const city = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), facade, N);
+  const roofs = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), scanned('grey_roof_tiles', { color: 0x9aa3ad, roughness: 0.7, metalness: 0.2 }, { scale: 0.25 }), N);
   let n = 0;
   while (n < N) {
     const x = (r() - 0.5) * 3000, z = (r() - 0.5) * 3000;
@@ -235,7 +362,7 @@ export function createEiffel(renderer) {
   );
 
   return {
-    scene, camera, exposure: 0.5,
+    scene, camera, exposure: 0.65,
     resize(aspect) { camera.aspect = aspect; camera.fov = aspect < 0.9 ? 66 : 50; camera.updateProjectionMatrix(); },
     update(t, time) {
       path.apply(camera, t);

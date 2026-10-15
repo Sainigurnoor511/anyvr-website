@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <title>AnyVR Premium Concept A</title>
+  <path d="M128 34C78.294 34 38 74.294 38 124V150H66V124C66 89.758 93.758 62 128 62C162.242 62 190 89.758 190 124V150H218V124C218 74.294 177.706 34 128 34Z" fill="#101114"/>
+  <path d="M152 66H188V190H152V66Z" fill="#101114"/>
+  <path d="M188 66H82L152 90H188V66Z" fill="#101114"/>
+  <path d="M188 190H82L152 166H188V190Z" fill="#101114"/>
+  <circle cx="124" cy="128" r="7" fill="#101114"/>
+</svg>

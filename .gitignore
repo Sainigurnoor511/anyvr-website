@@ -16,3 +16,6 @@ pnpm-debug.log*
 Thumbs.db
 .idea/
 .vscode/
+
+# Custom
+docs/

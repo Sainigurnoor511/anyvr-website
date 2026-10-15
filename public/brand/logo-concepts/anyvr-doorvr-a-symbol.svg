@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <title>AnyVR DoorVR concept A</title>
+  <path fill="#111111" fill-rule="evenodd" d="M128 50C90.445 50 60 80.445 60 118V136H86V118C86 94.804 104.804 76 128 76C151.196 76 170 94.804 170 118V136H196V118C196 80.445 165.555 50 128 50Z"/>
+  <path fill="#111111" fill-rule="evenodd" d="M40 136C40 124.954 48.954 116 60 116H196C207.046 116 216 124.954 216 136V144C216 155.046 207.046 164 196 164H60C48.954 164 40 155.046 40 144V136ZM116 108H140V214H116V108Z"/>
+  <circle cx="134" cy="160" r="4" fill="#f7f7f4"/>
+</svg>

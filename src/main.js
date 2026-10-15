@@ -1,359 +1,171 @@
-import '@fontsource-variable/geist';
-import '@fontsource-variable/geist-mono';
-import '@phosphor-icons/web/duotone';
-import Lenis from 'lenis';
-import gsap from 'gsap';
-import { siBlender, siFlutter, siGoogle, siPython, siTensorflow, siUnity } from 'simple-icons/icons';
-import { createLobby } from './three/lobby.js';
-import { Stage } from './three/stage.js';
-import { createStudio } from './three/studio.js';
 import './styles.css';
 
-const accent = '#ff7847';
-const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const range = (p, a, b) => clamp((p - a) / (b - a));
-const smooth = (t) => t * t * (3 - 2 * t);
-const damp = (a, b, lambda, dt) => a + (b - a) * (1 - Math.exp(-lambda * dt));
+document.documentElement.classList.add('js');
+const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+const motionButton = document.querySelector('[data-motion]');
+let reduced = preference.matches;
+let experience;
 
-const canvas = document.querySelector('#gl');
-const story = document.querySelector('#story');
-const nav = document.querySelector('[data-nav]');
-const stage = new Stage(canvas, { accent });
-
-const controllers = {
-  studio: createStudio(stage.renderer, accent),
-  lobby: createLobby(stage.renderer, accent),
-  taj: null,
-  eiffel: null,
-  giza: null,
-};
-
-const sceneLoaders = {
-  taj: () => import('./three/taj.js').then((m) => m.createTaj(stage.renderer)),
-  eiffel: () => import('./three/eiffel.js').then((m) => m.createEiffel(stage.renderer)),
-  giza: () => import('./three/giza.js').then((m) => m.createGiza(stage.renderer)),
-};
-
-const sceneLoadState = { taj: null, eiffel: null, giza: null };
-
-const pins = {
-  home: document.querySelector('[data-pin="home"]'),
-  agra: document.querySelector('[data-pin="agra"]'),
-  paris: document.querySelector('[data-pin="paris"]'),
-  giza: document.querySelector('[data-pin="giza"]'),
-};
-
-const storyPhases = [
-  { start: 0, end: 0.37, key: 'studio' },
-  { start: 0.37, end: 0.56, key: 'lobby' },
-  { start: 0.56, end: 0.7, key: 'taj' },
-  { start: 0.7, end: 0.84, key: 'eiffel' },
-  { start: 0.84, end: 0.97, key: 'giza' },
-];
-
-const CROSSFADE = 0.02;
-
-function getController(key) {
-  return controllers[key] || controllers.lobby;
+function setMotion(value) {
+  reduced = value;
+  experience?.setReducedMotion(reduced);
+  document.body.classList.toggle('reduced-motion', reduced);
+  motionButton.setAttribute('aria-pressed', String(reduced));
+  motionButton.textContent = reduced ? 'Enable motion' : 'Reduce motion';
 }
+setMotion(reduced);
+motionButton.addEventListener('click', () => setMotion(!reduced));
+preference.addEventListener('change', (event) => setMotion(event.matches));
 
-function ensureScene(key) {
-  if (!sceneLoaders[key]) return Promise.resolve(getController(key));
-  if (controllers[key]) return Promise.resolve(controllers[key]);
-  if (sceneLoadState[key]) return sceneLoadState[key];
-  sceneLoadState[key] = sceneLoaders[key]().then((controller) => {
-    controllers[key] = controller;
-    controller.resize(stage.aspect);
-    return controller;
-  });
-  return sceneLoadState[key];
+const menu = document.querySelector('.menu-toggle');
+const navigation = document.querySelector('.nav-links');
+function closeMenu() {
+  menu.setAttribute('aria-expanded', 'false');
+  menu.setAttribute('aria-label', 'Open menu');
+  navigation.classList.remove('is-open');
 }
-
-const showEls = [...document.querySelectorAll('[data-show]')].map((el) => {
-  const [a, b] = (el.getAttribute('data-show') || '-1,-1').split(',').map(Number);
-  return { el, a, b, alpha: -1 };
+menu.addEventListener('click', () => {
+  const open = menu.getAttribute('aria-expanded') !== 'true';
+  menu.setAttribute('aria-expanded', String(open));
+  menu.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  navigation.classList.toggle('is-open', open);
 });
-const tripEls = [...document.querySelectorAll('[data-trip]')].map((el) => ({ el, at: Number(el.getAttribute('data-trip')) }));
-
-function setOpacityByRange(p) {
-  showEls.forEach((entry) => {
-    const { el, a, b } = entry;
-    const t = smooth(range(p, a, b));
-    const entering = range(p, a, a + 0.015);
-    const leaving = 1 - range(p, b - 0.02, b + 0.02);
-    const alpha = clamp(Math.min(Math.max(t, entering), leaving));
-    if (Math.abs(alpha - entry.alpha) < 0.004) return;
-    entry.alpha = alpha;
-    el.style.opacity = `${alpha}`;
-    el.style.transform = `translate3d(0, ${(1 - alpha) * 16}px, 0)`;
-    el.style.filter = `blur(${(1 - alpha) * 2.2}px)`;
-    el.style.pointerEvents = alpha > 0.35 ? 'auto' : 'none';
-  });
-
-  tripEls.forEach(({ el, at }) => {
-    el.classList.toggle('is-active', Math.abs(p - at) < 0.04);
-  });
-}
-
-function setPins(p) {
-  if (p > 0.16) {
-    Object.values(pins).forEach((el) => el?.classList.remove('is-visible'));
-    return;
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && menu.getAttribute('aria-expanded') === 'true') {
+    closeMenu();
+    menu.focus();
   }
-  for (const key of Object.keys(pins)) {
-    const el = pins[key];
-    if (!el) continue;
-    const pos = controllers.studio.project(key);
-    el.style.left = `${pos.x * 100}%`;
-    el.style.top = `${pos.y * 100}%`;
-    el.classList.toggle('is-visible', pos.visible);
+});
+navigation.addEventListener('click', (event) => { if (event.target.closest('a')) closeMenu(); });
+window.matchMedia('(min-width: 768px)').addEventListener('change', closeMenu);
+
+const reveals = new IntersectionObserver((entries) => {
+  for (const entry of entries) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-in');
+      reveals.unobserve(entry.target);
+    }
   }
-}
+}, { threshold: 0.1 });
+document.querySelectorAll('[data-reveal]').forEach((el) => reveals.observe(el));
 
-let storyStart = 0;
-let storyRange = 1;
-
-function measureStory() {
-  storyStart = story.offsetTop;
-  storyRange = Math.max(story.offsetHeight - window.innerHeight, 1);
-}
-
-function storyProgress() {
-  return clamp((window.scrollY - storyStart) / storyRange);
-}
-
-function phaseAt(p) {
-  const phase = storyPhases.find((s) => p >= s.start && p < s.end) || storyPhases.at(-1);
-  const local = range(p, phase.start, phase.end);
-  return { phase, local };
-}
-
-function phaseBlend(p) {
-  const { phase } = phaseAt(p);
-  const i = storyPhases.indexOf(phase);
-  const outMix = range(p, phase.end - CROSSFADE, phase.end + CROSSFADE);
-  if (i < storyPhases.length - 1 && outMix > 0) {
-    return { from: phase, to: storyPhases[i + 1], mix: outMix };
+// highlight the nav link for the section in view
+const navLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+const spy = new IntersectionObserver((entries) => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue;
+    navLinks.forEach((link) => link.setAttribute('aria-current', String(link.getAttribute('href') === `#${entry.target.id}`)));
   }
-  if (i > 0) {
-    const prev = storyPhases[i - 1];
-    const inMix = range(p, prev.end - CROSSFADE, prev.end + CROSSFADE);
-    if (inMix > 0 && p <= prev.end + CROSSFADE) return { from: prev, to: phase, mix: inMix };
-  }
-  return { from: phase, to: null, mix: 0 };
-}
+}, { rootMargin: '-45% 0px -50% 0px' });
+document.querySelectorAll('main > section[id]').forEach((section) => spy.observe(section));
 
-function updateControllerForPhase(controller, phase, p, now, pick) {
-  if (phase.key === 'studio') {
-    controller.update(p, now, pick);
-    return;
-  }
-  const local = range(p, phase.start, phase.end);
-  controller.update(local, now, pick);
-}
-
-function applyPostFx(p) {
-  const u = stage.uniforms;
-  const lensIn = smooth(range(p, 0.335, 0.42));
-  const lensOut = 1 - smooth(range(p, 0.94, 0.985));
-  u.uLensOn.value = lensIn > 0.02 || p > 0.42 ? 1 : 0;
-  u.uOpen.value = clamp(lensIn * lensOut);
-  u.uMerge.value = smooth(range(p, 0.475, 0.56));
-
-  const warpA = Math.sin(Math.PI * range(p, 0.555, 0.585));
-  const warpB = Math.sin(Math.PI * range(p, 0.695, 0.725));
-  const warpC = Math.sin(Math.PI * range(p, 0.835, 0.865));
-  const warp = Math.max(0, warpA, warpB, warpC);
-  u.uWarp.value = warp * 0.58;
-  u.uFlash.value = Math.pow(warp, 2) * 0.32;
-  u.uFade.value = smooth(range(p, 0.985, 1));
-}
-
-function currentGuideMonument(p) {
-  if (p < 0.71) return 'taj';
-  if (p < 0.845) return 'eiffel';
-  return 'giza';
-}
-
-const guideData = {
+const guide = {
   taj: {
-    where: 'At the Taj Mahal',
-    hello: { en: 'Welcome to the Taj Mahal.', hi: 'ताजमहल में आपका स्वागत है।', fr: 'Bienvenue au Taj Mahal.', ar: 'مرحبا بك في تاج محل.', es: 'Bienvenido al Taj Mahal.' },
-    line: {
-      story: 'Built as a love letter in marble, it changes color with the sky.',
-      history: 'Construction began in 1632 and took around two decades.',
-      friend: 'Stand by the pool. Best reflection spot right there.',
-    },
+    name: 'Taj Mahal',
+    en: ['Welcome to the Taj Mahal.', 'Imagine arriving at first light. The marble catches the morning sun, and the monument seems to change before your eyes.', 'Commissioned by Shah Jahan in 1632, the Taj Mahal was built in memory of Mumtaz Mahal. The wider complex took around two decades to complete.', 'Try looking from the reflecting pool. The garden brings everything into balance, and the reflection gives you a second view.'],
+    hi: ['ताजमहल में आपका स्वागत है।', 'सुबह की पहली रोशनी में आने की कल्पना करें। सूरज की किरणें संगमरमर पर पड़ती हैं और इमारत का रंग बदलता हुआ लगता है।', 'शाहजहाँ ने मुमताज़ महल की याद में 1632 में ताजमहल का निर्माण शुरू करवाया। पूरे परिसर को बनने में लगभग दो दशक लगे।', 'सामने के तालाब से देखिए। बगीचे की सममिति और पानी में प्रतिबिंब इस जगह को एक नया नज़रिया देते हैं।'],
+    fr: ['Bienvenue au Taj Mahal.', 'Imaginez arriver aux premières lueurs du jour. Le marbre capte le soleil et le monument semble changer sous vos yeux.', 'Commandé par Shah Jahan en 1632 en mémoire de Mumtaz Mahal, le complexe du Taj Mahal a demandé environ deux décennies de travaux.', 'Regardez depuis le bassin. La symétrie du jardin et le reflet dans l’eau offrent une autre perspective.'],
   },
   eiffel: {
-    where: 'At the Eiffel Tower',
-    hello: { en: 'Welcome to the Eiffel Tower.', hi: 'एफ़िल टावर में आपका स्वागत है।', fr: 'Bienvenue à la tour Eiffel.', ar: 'مرحبا بك في برج إيفل.', es: 'Bienvenido a la Torre Eiffel.' },
-    line: {
-      story: 'At dusk, Paris glows and the iron giant sparkles every hour.',
-      history: 'It opened in 1889 with around 18,000 iron components.',
-      friend: 'Look up from the base. The lattice pattern is wild from here.',
-    },
+    name: 'Eiffel Tower',
+    en: ['Welcome to the Eiffel Tower.', 'From below, thousands of iron pieces become a delicate pattern against the sky. A feat of engineering becomes a different kind of landscape.', 'The Eiffel Tower opened for the 1889 World’s Fair. Its structure uses about 18,000 iron components and 2.5 million rivets.', 'Look straight up from the base. All those diagonal beams make much more sense when you can see how they fit together.'],
+    hi: ['एफ़िल टावर में आपका स्वागत है।', 'नीचे से देखने पर लोहे के हज़ारों हिस्से आसमान के सामने एक सुंदर जाल बनाते हैं। इंजीनियरिंग भी एक अनोखा दृश्य बन सकती है।', 'एफ़िल टावर 1889 के विश्व मेले के लिए खोला गया था। इसमें लगभग 18,000 लोहे के हिस्से और 25 लाख रिवेट हैं।', 'टावर के नीचे से ऊपर देखिए। तिरछी बीम किस तरह जुड़ती हैं, यह इस नज़रिए से साफ़ दिखता है।'],
+    fr: ['Bienvenue à la tour Eiffel.', 'Vue d’en bas, la structure de fer dessine un motif délicat dans le ciel. Une prouesse technique devient un paysage à part entière.', 'La tour Eiffel a ouvert pour l’Exposition universelle de 1889. Elle comporte environ 18 000 pièces de fer et 2,5 millions de rivets.', 'Regardez tout droit vers le sommet depuis la base. On comprend mieux comment les poutres diagonales s’assemblent.'],
   },
   giza: {
-    where: 'At the Pyramids of Giza',
-    hello: { en: 'Welcome to Giza.', hi: 'गीज़ा में आपका स्वागत है।', fr: 'Bienvenue à Gizeh.', ar: 'مرحبا بك في الجيزة.', es: 'Bienvenido a Guiza.' },
-    line: {
-      story: 'Wind, sun, and stone. These forms watched millennia pass.',
-      history: 'Khufu remained the tallest man-made structure for nearly 3,800 years.',
-      friend: 'Shift left and you can frame all three pyramids together.',
-    },
+    name: 'Pyramids of Giza',
+    en: ['Welcome to Giza.', 'Wind moves across the plateau. Beyond it, these immense stone forms have watched more than four thousand years of history unfold.', 'The Great Pyramid was built for Khufu in the 26th century BCE. It remained the tallest human-made structure for roughly 3,800 years.', 'Take a wider view. Seeing the pyramids together helps you understand just how much of the plateau they occupy.'],
+    hi: ['गीज़ा में आपका स्वागत है।', 'पठार पर हवा बहती है। पत्थर की इन विशाल आकृतियों ने चार हज़ार से अधिक वर्षों का इतिहास देखा है।', 'महान पिरामिड खुफू के लिए ईसा पूर्व 26वीं शताब्दी में बनाया गया था। यह लगभग 3,800 वर्षों तक सबसे ऊँची मानव-निर्मित संरचना रहा।', 'थोड़ा दूर से देखिए। पिरामिडों को एक साथ देखने पर उनके विशाल आकार का बेहतर अंदाज़ा होता है।'],
+    fr: ['Bienvenue à Gizeh.', 'Le vent traverse le plateau. Ces immenses formes de pierre ont vu se dérouler plus de quatre mille ans d’histoire.', 'La Grande Pyramide a été construite pour Khéops au XXVIe siècle avant notre ère. Elle est restée la plus haute construction humaine pendant environ 3 800 ans.', 'Prenez du recul. Voir les pyramides ensemble permet de mieux comprendre la place qu’elles occupent sur le plateau.'],
   },
 };
-
 const form = document.querySelector('[data-guide-form]');
-const meta = document.querySelector('[data-guide-meta]');
+const response = document.querySelector('.guide-response');
 const hello = document.querySelector('[data-guide-hello]');
 const line = document.querySelector('[data-guide-line]');
-const where = document.querySelector('.guide-where');
+const audioButton = document.querySelector('[data-speak]');
+const audioStatus = document.querySelector('[data-audio-status]');
+const synth = window.speechSynthesis;
+const PLAY_ICON = '<svg class="ico-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 3.8v8.4l6.6-4.2z"/></svg>';
+const STOP_ICON = '<svg class="ico-play" viewBox="0 0 16 16" aria-hidden="true"><rect x="4.5" y="4.5" width="7" height="7" rx="1.2"/></svg>';
+let guideLang = 'en';
+let speaking = false;
+let speechVersion = 0;
 
-let guideState = { persona: 'story', lang: 'en', voice: 'warm' };
-let scrollVelocity = 0;
-
-function updateGuideCopy(p) {
-  const monument = currentGuideMonument(p);
-  const data = guideData[monument];
-  if (!data) return;
-  meta.textContent = `${labelPersona(guideState.persona)}, ${guideState.voice} voice`;
-  where.textContent = data.where;
-  hello.textContent = data.hello[guideState.lang] || data.hello.en;
-  line.textContent = data.line[guideState.persona] || data.line.story;
+function stopAudio() {
+  speechVersion++;
+  synth?.cancel();
+  speaking = false;
+  audioButton.innerHTML = `Listen ${PLAY_ICON}`;
 }
-
-function labelPersona(persona) {
-  if (persona === 'history') return 'Historian';
-  if (persona === 'friend') return 'Friend';
-  return 'Storyteller';
+function updateVoiceAvailability() {
+  audioButton.hidden = !synth;
+  if (!synth) return;
+  const available = synth.getVoices().some((voice) => voice.lang.toLowerCase().startsWith(guideLang));
+  audioButton.disabled = !available;
+  audioStatus.textContent = available ? '' : 'No voice for this language is installed in your browser.';
 }
-
-form?.addEventListener('change', () => {
-  const fd = new FormData(form);
-  guideState = {
-    persona: fd.get('persona') || 'story',
-    lang: fd.get('lang') || 'en',
-    voice: fd.get('voice') || 'warm',
+function updateGuide() {
+  stopAudio();
+  const values = new FormData(form);
+  const place = guide[values.get('place')];
+  guideLang = values.get('lang');
+  const persona = values.get('persona');
+  const phrases = place[guideLang];
+  response.lang = guideLang;
+  document.querySelector('[data-guide-where]').textContent = place.name;
+  hello.textContent = phrases[0];
+  line.textContent = phrases[{ story: 1, history: 2, friend: 3 }[persona]];
+  document.querySelector('[data-guide-meta]').textContent = `${{ story: 'Storyteller', history: 'Historian', friend: 'Friend' }[persona]} · ${{ en: 'English', hi: 'Hindi', fr: 'French' }[guideLang]}`;
+  updateVoiceAvailability();
+}
+form.addEventListener('change', updateGuide);
+synth?.addEventListener('voiceschanged', updateVoiceAvailability);
+audioButton.addEventListener('click', () => {
+  if (speaking) { stopAudio(); return; }
+  const utterance = new SpeechSynthesisUtterance(`${hello.textContent} ${line.textContent}`);
+  utterance.voice = synth.getVoices().find((voice) => voice.lang.toLowerCase().startsWith(guideLang));
+  utterance.lang = guideLang;
+  utterance.rate = 0.92;
+  const version = ++speechVersion;
+  speaking = true;
+  audioButton.innerHTML = `Stop audio ${STOP_ICON}`;
+  utterance.onend = () => { if (version === speechVersion) stopAudio(); };
+  utterance.onerror = () => {
+    if (version !== speechVersion) return;
+    stopAudio();
+    audioStatus.textContent = 'Audio could not play. You can still read the story above.';
   };
-  updateGuideCopy(renderP);
+  synth.speak(utterance);
 });
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopAudio(); });
+updateGuide();
 
-function buildLogos() {
-  const list = document.querySelector('[data-logos]');
-  if (!list) return;
-  const items = [
-    ['Flutter', siFlutter],
-    ['OpenVR', siUnity],
-    ['Google VR', siGoogle],
-    ['Unity', siUnity],
-    ['Blender', siBlender],
-    ['Python', siPython],
-    ['TensorFlow', siTensorflow],
-    ['OpenXR', siUnity],
-  ];
-  list.innerHTML = items.map(([name, icon]) => (
-    `<li><span class="logo-icon" aria-hidden="true" style="--logo:${icon.hex};">${icon.svg}</span><span>${name}</span></li>`
-  )).join('');
-}
-
-function bindReveal() {
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) entry.target.classList.add('is-in');
-    });
-  }, { threshold: 0.18 });
-  document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
-}
-
-function render(nowMs) {
-  const now = nowMs * 0.001;
-  const dt = Math.min(0.05, Math.max(0.001, now - lastNow));
-  lastNow = now;
-
-  targetP = storyProgress();
-  renderP = damp(renderP, targetP, 14, dt);
-  if (renderP > 0.48) ensureScene('taj');
-  if (renderP > 0.64) ensureScene('eiffel');
-  if (renderP > 0.79) ensureScene('giza');
-
-  setOpacityByRange(renderP);
-  setPins(renderP);
-  updateGuideCopy(renderP);
-  applyPostFx(renderP);
-
-  const pick = smooth(range(renderP, 0.475, 0.535));
-  const blendState = phaseBlend(renderP);
-  const fromController = getController(blendState.from.key);
-  updateControllerForPhase(fromController, blendState.from, renderP, now, pick);
-
-  let toController = null;
-  if (blendState.to && blendState.mix > 0.001) {
-    toController = getController(blendState.to.key);
-    updateControllerForPhase(toController, blendState.to, renderP, now, pick);
-  }
-
-  const blurStrength = clamp(Math.abs(scrollVelocity) / 1800, 0, 0.3);
-  stage.uniforms.uMotion.value = damp(stage.uniforms.uMotion.value, blurStrength, 9, dt);
-  stage.uniforms.uMotionDir.value.set(0, scrollVelocity >= 0 ? 1 : -1);
-  stage.uniforms.uTime.value = now;
-  stage.renderBlend(
-    fromController.scene,
-    fromController.camera,
-    fromController.exposure,
-    toController?.scene,
-    toController?.camera,
-    toController?.exposure,
-    blendState.mix,
-  );
-
-  nav.classList.toggle('is-solid', window.scrollY > 24);
-  requestAnimationFrame(render);
-}
-
-const lenis = new Lenis({
-  smoothWheel: true,
-  wheelMultiplier: 0.86,
-  touchMultiplier: 1.15,
-  lerp: 0.065,
-});
-lenis.on('scroll', (e) => {
-  scrollVelocity = e.velocity || 0;
-});
-
-function raf(time) {
-  lenis.raf(time);
-  requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
-
-window.addEventListener('resize', () => {
-  stage.resize();
-  measureStory();
-  Object.values(controllers).forEach((c) => c?.resize(stage.aspect));
-});
-
-document.querySelectorAll('[data-scroll-to]').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const target = Number(btn.getAttribute('data-scroll-to'));
-    const top = story.offsetTop + target * Math.max(story.offsetHeight - window.innerHeight, 1);
-    lenis.scrollTo(top, { duration: 1.3, easing: (x) => 1 - Math.pow(1 - x, 4) });
+document.querySelectorAll('[data-scroll-to]').forEach((button) => {
+  button.addEventListener('click', () => {
+    if (experience && !reduced) experience.seek(Number(button.dataset.scrollTo), button);
+    else document.querySelector('#destinations').scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' });
   });
 });
-
-document.querySelector('[data-pick]')?.addEventListener('mouseenter', () => {
-  gsap.fromTo('.hud-guide .orb', { scale: 1 }, { scale: 1.18, yoyo: true, repeat: 1, duration: 0.24, ease: 'power2.out' });
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener('click', (event) => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (!target || !experience) return;
+    event.preventDefault();
+    experience.navigate(target);
+    history.replaceState(null, '', link.getAttribute('href'));
+  });
 });
-
-stage.resize();
-measureStory();
-Object.values(controllers).forEach((c) => c?.resize(stage.aspect));
-ensureScene('taj');
-buildLogos();
-bindReveal();
-requestAnimationFrame(render);
-
-let targetP = storyProgress();
-let renderP = targetP;
-let lastNow = 0;
+const status = document.querySelector('[data-scene-status]');
+import('./experience.js').then(async ({ initExperience }) => {
+  experience = await initExperience({ reduced, onStatus(message) {
+    status.textContent = message;
+    status.hidden = !message;
+  } });
+  experience.setReducedMotion(reduced);
+}).catch((error) => {
+  console.error('3D preview could not start:', error);
+  document.body.classList.add('no-webgl');
+  status.textContent = '3D is unavailable on this device. Explore the destinations below.';
+  status.hidden = false;
+});

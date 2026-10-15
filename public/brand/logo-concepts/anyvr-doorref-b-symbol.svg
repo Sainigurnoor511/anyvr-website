@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <title>AnyVR Door Refined B</title>
+  <path fill="#111111" d="M150 40H190V216H150V40Z"/>
+  <path fill="#111111" d="M190 40H82L150 70H190V40Z"/>
+  <path fill="#111111" d="M190 216H82L150 186H190V216Z"/>
+  <circle cx="122" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" d="M60 92C60 70.909 77.909 54 99 54H150V74H99C88.954 74 80 81.954 80 92V164C80 174.046 88.954 182 99 182H150V202H99C77.909 202 60 185.091 60 164V92Z"/>
+</svg>

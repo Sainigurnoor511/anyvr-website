@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="840" viewBox="0 0 1600 840"><defs><filter id="grey"><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="1600" height="840" fill="#f7f7f4"/><text x="60" y="78" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="700" fill="#161616">AnyVR — Door-led Concepts</text><text x="60" y="116" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="20" fill="#6b6b6b">Round 3. Built from your reference style + VR cues.</text><rect x="60" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#161616" stroke-width="2"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="90" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined A</title>
+  <path d="M154 44H186V212H154V44Z" fill="#111111"/>
+  <path d="M186 44H86L154 72H186V44Z" fill="#111111"/>
+  <path d="M186 212H86L154 184H186V212Z" fill="#111111"/>
+  <circle cx="126" cy="128" r="8" fill="#111111"/>
+  <path d="M86 52C86 40.954 94.954 32 106 32H154V52H86Z" fill="#111111"/>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="90" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined A</title>
+  <path d="M154 44H186V212H154V44Z" fill="#111111"/>
+  <path d="M186 44H86L154 72H186V44Z" fill="#111111"/>
+  <path d="M186 212H86L154 184H186V212Z" fill="#111111"/>
+  <circle cx="126" cy="128" r="8" fill="#111111"/>
+  <path d="M86 52C86 40.954 94.954 32 106 32H154V52H86Z" fill="#111111"/>
+</svg>
+</g><text x="122" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="180" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined A</title>
+  <path d="M154 44H186V212H154V44Z" fill="#111111"/>
+  <path d="M186 44H86L154 72H186V44Z" fill="#111111"/>
+  <path d="M186 212H86L154 184H186V212Z" fill="#111111"/>
+  <circle cx="126" cy="128" r="8" fill="#111111"/>
+  <path d="M86 52C86 40.954 94.954 32 106 32H154V52H86Z" fill="#111111"/>
+</svg>
+</g><text x="196" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="238" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined A</title>
+  <path d="M154 44H186V212H154V44Z" fill="#111111"/>
+  <path d="M186 44H86L154 72H186V44Z" fill="#111111"/>
+  <path d="M186 212H86L154 184H186V212Z" fill="#111111"/>
+  <circle cx="126" cy="128" r="8" fill="#111111"/>
+  <path d="M86 52C86 40.954 94.954 32 106 32H154V52H86Z" fill="#111111"/>
+</svg>
+</g><text x="246" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="90.0" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">A · Door Prism</text><text x="90.0" y="664" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#161616" letter-spacing="1.5">RECOMMENDED</text><text x="90.0" y="698" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Your door shape core, with a subtle headset</text><text x="90.0" y="724" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">band cue on top.</text><rect x="562.667" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="592.667" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined B</title>
+  <path fill="#111111" d="M150 40H190V216H150V40Z"/>
+  <path fill="#111111" d="M190 40H82L150 70H190V40Z"/>
+  <path fill="#111111" d="M190 216H82L150 186H190V216Z"/>
+  <circle cx="122" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" d="M60 92C60 70.909 77.909 54 99 54H150V74H99C88.954 74 80 81.954 80 92V164C80 174.046 88.954 182 99 182H150V202H99C77.909 202 60 185.091 60 164V92Z"/>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="592.667" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined B</title>
+  <path fill="#111111" d="M150 40H190V216H150V40Z"/>
+  <path fill="#111111" d="M190 40H82L150 70H190V40Z"/>
+  <path fill="#111111" d="M190 216H82L150 186H190V216Z"/>
+  <circle cx="122" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" d="M60 92C60 70.909 77.909 54 99 54H150V74H99C88.954 74 80 81.954 80 92V164C80 174.046 88.954 182 99 182H150V202H99C77.909 202 60 185.091 60 164V92Z"/>
+</svg>
+</g><text x="624.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="682.667" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined B</title>
+  <path fill="#111111" d="M150 40H190V216H150V40Z"/>
+  <path fill="#111111" d="M190 40H82L150 70H190V40Z"/>
+  <path fill="#111111" d="M190 216H82L150 186H190V216Z"/>
+  <circle cx="122" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" d="M60 92C60 70.909 77.909 54 99 54H150V74H99C88.954 74 80 81.954 80 92V164C80 174.046 88.954 182 99 182H150V202H99C77.909 202 60 185.091 60 164V92Z"/>
+</svg>
+</g><text x="698.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="740.667" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined B</title>
+  <path fill="#111111" d="M150 40H190V216H150V40Z"/>
+  <path fill="#111111" d="M190 40H82L150 70H190V40Z"/>
+  <path fill="#111111" d="M190 216H82L150 186H190V216Z"/>
+  <circle cx="122" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" d="M60 92C60 70.909 77.909 54 99 54H150V74H99C88.954 74 80 81.954 80 92V164C80 174.046 88.954 182 99 182H150V202H99C77.909 202 60 185.091 60 164V92Z"/>
+</svg>
+</g><text x="748.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="592.6666666666667" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">B · Portal Bracket</text><text x="592.6666666666667" y="670" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Door glyph with bracket enclosure to imply</text><text x="592.6666666666667" y="696" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">visor frame and immersion.</text><rect x="1065.33" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="1095.33" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined C</title>
+  <path fill="#111111" d="M152 46H188V210H152V46Z"/>
+  <path fill="#111111" d="M188 46H88L152 72H188V46Z"/>
+  <path fill="#111111" d="M188 210H88L152 184H188V210Z"/>
+  <circle cx="124" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" fill-rule="evenodd" d="M40 128C40 79.399 79.399 40 128 40H152V64H128C92.654 64 64 92.654 64 128C64 163.346 92.654 192 128 192H152V216H128C79.399 216 40 176.601 40 128Z"/>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="1095.33" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined C</title>
+  <path fill="#111111" d="M152 46H188V210H152V46Z"/>
+  <path fill="#111111" d="M188 46H88L152 72H188V46Z"/>
+  <path fill="#111111" d="M188 210H88L152 184H188V210Z"/>
+  <circle cx="124" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" fill-rule="evenodd" d="M40 128C40 79.399 79.399 40 128 40H152V64H128C92.654 64 64 92.654 64 128C64 163.346 92.654 192 128 192H152V216H128C79.399 216 40 176.601 40 128Z"/>
+</svg>
+</g><text x="1127.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="1185.33" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined C</title>
+  <path fill="#111111" d="M152 46H188V210H152V46Z"/>
+  <path fill="#111111" d="M188 46H88L152 72H188V46Z"/>
+  <path fill="#111111" d="M188 210H88L152 184H188V210Z"/>
+  <circle cx="124" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" fill-rule="evenodd" d="M40 128C40 79.399 79.399 40 128 40H152V64H128C92.654 64 64 92.654 64 128C64 163.346 92.654 192 128 192H152V216H128C79.399 216 40 176.601 40 128Z"/>
+</svg>
+</g><text x="1201.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="1243.33" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Door Refined C</title>
+  <path fill="#111111" d="M152 46H188V210H152V46Z"/>
+  <path fill="#111111" d="M188 46H88L152 72H188V46Z"/>
+  <path fill="#111111" d="M188 210H88L152 184H188V210Z"/>
+  <circle cx="124" cy="128" r="7" fill="#111111"/>
+  <path fill="#111111" fill-rule="evenodd" d="M40 128C40 79.399 79.399 40 128 40H152V64H128C92.654 64 64 92.654 64 128C64 163.346 92.654 192 128 192H152V216H128C79.399 216 40 176.601 40 128Z"/>
+</svg>
+</g><text x="1251.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="1095.3333333333335" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">C · Orbit Door</text><text x="1095.3333333333335" y="670" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Door core with orbital ring to show</text><text x="1095.3333333333335" y="696" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">virtual-world entry around one portal.</text></svg>

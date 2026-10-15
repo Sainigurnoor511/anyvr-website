@@ -1,0 +1,14 @@
+# AnyVR
+
+> AnyVR is a VR software project for visiting the world's landmarks remotely, with an AI tour guide. This website is an interactive 3D preview by Gurnoor Singh Saini.
+
+## Pages
+
+- [Home and 3D tour](/): scroll-driven tour from a VR headset into the Taj Mahal, the Eiffel Tower and the Pyramids of Giza.
+- [Destinations](/#destinations): rendered stills of the three places, each linking into the 3D tour.
+- [Your guide](/#guide): a prepared preview of guide personalities and languages (English, Hindi, French). Not a live AI service.
+- [Logo study](/brand/anyvr-logo-preview.png): the AnyVR mark.
+
+## Project
+
+- [Source on GitHub](https://github.com/Sainigurnoor511/AniVR)

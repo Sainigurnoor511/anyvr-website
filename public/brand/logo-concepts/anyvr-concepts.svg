@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="840" viewBox="0 0 1600 840"><defs><filter id="grey"><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="1600" height="840" fill="#f7f7f4"/><text x="60" y="78" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="700" fill="#161616">AnyVR — Logo Concepts</text><text x="60" y="116" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="20" fill="#6b6b6b">Greyscale concept round. Pick one direction or combine elements.</text><rect x="60" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#161616" stroke-width="2"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="90" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Twin Lens Portal concept</title>
+  <path fill="#111111" fill-rule="evenodd" d="M78 70C45.968 70 20 95.968 20 128C20 160.032 45.968 186 78 186C110.032 186 136 160.032 136 128C136 95.968 110.032 70 78 70ZM78 94C59.222 94 44 109.222 44 128C44 146.778 59.222 162 78 162C96.778 162 112 146.778 112 128C112 109.222 96.778 94 78 94Z"/>
+  <path fill="#111111" fill-rule="evenodd" d="M178 70C145.968 70 120 95.968 120 128C120 160.032 145.968 186 178 186C210.032 186 236 160.032 236 128C236 95.968 210.032 70 178 70ZM178 94C159.222 94 144 109.222 144 128C144 146.778 159.222 162 178 162C196.778 162 212 146.778 212 128C212 109.222 196.778 94 178 94Z"/>
+  <rect x="112" y="116" width="32" height="24" rx="12" fill="#111111"/>
+  <path d="M128 62L144 90H112L128 62Z" fill="#111111"/>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="90" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Twin Lens Portal concept</title>
+  <path fill="#111111" fill-rule="evenodd" d="M78 70C45.968 70 20 95.968 20 128C20 160.032 45.968 186 78 186C110.032 186 136 160.032 136 128C136 95.968 110.032 70 78 70ZM78 94C59.222 94 44 109.222 44 128C44 146.778 59.222 162 78 162C96.778 162 112 146.778 112 128C112 109.222 96.778 94 78 94Z"/>
+  <path fill="#111111" fill-rule="evenodd" d="M178 70C145.968 70 120 95.968 120 128C120 160.032 145.968 186 178 186C210.032 186 236 160.032 236 128C236 95.968 210.032 70 178 70ZM178 94C159.222 94 144 109.222 144 128C144 146.778 159.222 162 178 162C196.778 162 212 146.778 212 128C212 109.222 196.778 94 178 94Z"/>
+  <rect x="112" y="116" width="32" height="24" rx="12" fill="#111111"/>
+  <path d="M128 62L144 90H112L128 62Z" fill="#111111"/>
+</svg>
+</g><text x="122" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="180" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Twin Lens Portal concept</title>
+  <path fill="#111111" fill-rule="evenodd" d="M78 70C45.968 70 20 95.968 20 128C20 160.032 45.968 186 78 186C110.032 186 136 160.032 136 128C136 95.968 110.032 70 78 70ZM78 94C59.222 94 44 109.222 44 128C44 146.778 59.222 162 78 162C96.778 162 112 146.778 112 128C112 109.222 96.778 94 78 94Z"/>
+  <path fill="#111111" fill-rule="evenodd" d="M178 70C145.968 70 120 95.968 120 128C120 160.032 145.968 186 178 186C210.032 186 236 160.032 236 128C236 95.968 210.032 70 178 70ZM178 94C159.222 94 144 109.222 144 128C144 146.778 159.222 162 178 162C196.778 162 212 146.778 212 128C212 109.222 196.778 94 178 94Z"/>
+  <rect x="112" y="116" width="32" height="24" rx="12" fill="#111111"/>
+  <path d="M128 62L144 90H112L128 62Z" fill="#111111"/>
+</svg>
+</g><text x="196" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="238" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Twin Lens Portal concept</title>
+  <path fill="#111111" fill-rule="evenodd" d="M78 70C45.968 70 20 95.968 20 128C20 160.032 45.968 186 78 186C110.032 186 136 160.032 136 128C136 95.968 110.032 70 78 70ZM78 94C59.222 94 44 109.222 44 128C44 146.778 59.222 162 78 162C96.778 162 112 146.778 112 128C112 109.222 96.778 94 78 94Z"/>
+  <path fill="#111111" fill-rule="evenodd" d="M178 70C145.968 70 120 95.968 120 128C120 160.032 145.968 186 178 186C210.032 186 236 160.032 236 128C236 95.968 210.032 70 178 70ZM178 94C159.222 94 144 109.222 144 128C144 146.778 159.222 162 178 162C196.778 162 212 146.778 212 128C212 109.222 196.778 94 178 94Z"/>
+  <rect x="112" y="116" width="32" height="24" rx="12" fill="#111111"/>
+  <path d="M128 62L144 90H112L128 62Z" fill="#111111"/>
+</svg>
+</g><text x="246" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="90.0" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">A · Twin Lens Portal</text><text x="90.0" y="664" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#161616" letter-spacing="1.5">RECOMMENDED</text><text x="90.0" y="698" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Two linked lenses with a portal apex:</text><text x="90.0" y="724" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">fast-read VR identity.</text><rect x="562.667" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="592.667" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Monument Aperture concept</title>
+  <path fill="#111111" fill-rule="evenodd" d="M128 30L216 214H184L162 168H94L72 214H40L128 30ZM128 88L108 136H148L128 88Z"/>
+  <path d="M172 54L128 152L84 54H116L128 84L140 54H172Z" fill="#111111"/>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="592.667" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Monument Aperture concept</title>
+  <path fill="#111111" fill-rule="evenodd" d="M128 30L216 214H184L162 168H94L72 214H40L128 30ZM128 88L108 136H148L128 88Z"/>
+  <path d="M172 54L128 152L84 54H116L128 84L140 54H172Z" fill="#111111"/>
+</svg>
+</g><text x="624.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="682.667" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Monument Aperture concept</title>
+  <path fill="#111111" fill-rule="evenodd" d="M128 30L216 214H184L162 168H94L72 214H40L128 30ZM128 88L108 136H148L128 88Z"/>
+  <path d="M172 54L128 152L84 54H116L128 84L140 54H172Z" fill="#111111"/>
+</svg>
+</g><text x="698.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="740.667" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Monument Aperture concept</title>
+  <path fill="#111111" fill-rule="evenodd" d="M128 30L216 214H184L162 168H94L72 214H40L128 30ZM128 88L108 136H148L128 88Z"/>
+  <path d="M172 54L128 152L84 54H116L128 84L140 54H172Z" fill="#111111"/>
+</svg>
+</g><text x="748.667" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="592.6666666666667" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">B · Monument Aperture</text><text x="592.6666666666667" y="670" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">A carved A/V monogram that suggests an</text><text x="592.6666666666667" y="696" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">entry gate into world landmarks.</text><rect x="1065.33" y="150" width="474.667" height="630" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="1095.33" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Headset Monogram concept</title>
+  <path d="M128 28C91.549 28 62 57.549 62 94V100H94V94C94 75.222 109.222 60 128 60C146.778 60 162 75.222 162 94V100H194V94C194 57.549 164.451 28 128 28Z" fill="#111111"/>
+  <path d="M48 120C48 108.954 56.954 100 68 100H188C199.046 100 208 108.954 208 120V128C208 139.046 199.046 148 188 148H68C56.954 148 48 139.046 48 128V120Z" fill="#111111"/>
+  <path d="M88 132L112 164H96L76 136V214H48V100H76V132H88Z" fill="#111111"/>
+  <path d="M208 100L164 214H134L90 100H121L149 177L177 100H208Z" fill="#111111"/>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="1095.33" y="516" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Headset Monogram concept</title>
+  <path d="M128 28C91.549 28 62 57.549 62 94V100H94V94C94 75.222 109.222 60 128 60C146.778 60 162 75.222 162 94V100H194V94C194 57.549 164.451 28 128 28Z" fill="#111111"/>
+  <path d="M48 120C48 108.954 56.954 100 68 100H188C199.046 100 208 108.954 208 120V128C208 139.046 199.046 148 188 148H68C56.954 148 48 139.046 48 128V120Z" fill="#111111"/>
+  <path d="M88 132L112 164H96L76 136V214H48V100H76V132H88Z" fill="#111111"/>
+  <path d="M208 100L164 214H134L90 100H121L149 177L177 100H208Z" fill="#111111"/>
+</svg>
+</g><text x="1127.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="1185.33" y="548" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Headset Monogram concept</title>
+  <path d="M128 28C91.549 28 62 57.549 62 94V100H94V94C94 75.222 109.222 60 128 60C146.778 60 162 75.222 162 94V100H194V94C194 57.549 164.451 28 128 28Z" fill="#111111"/>
+  <path d="M48 120C48 108.954 56.954 100 68 100H188C199.046 100 208 108.954 208 120V128C208 139.046 199.046 148 188 148H68C56.954 148 48 139.046 48 128V120Z" fill="#111111"/>
+  <path d="M88 132L112 164H96L76 136V214H48V100H76V132H88Z" fill="#111111"/>
+  <path d="M208 100L164 214H134L90 100H121L149 177L177 100H208Z" fill="#111111"/>
+</svg>
+</g><text x="1201.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 256 256" x="1243.33" y="564" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>AnyVR Headset Monogram concept</title>
+  <path d="M128 28C91.549 28 62 57.549 62 94V100H94V94C94 75.222 109.222 60 128 60C146.778 60 162 75.222 162 94V100H194V94C194 57.549 164.451 28 128 28Z" fill="#111111"/>
+  <path d="M48 120C48 108.954 56.954 100 68 100H188C199.046 100 208 108.954 208 120V128C208 139.046 199.046 148 188 148H68C56.954 148 48 139.046 48 128V120Z" fill="#111111"/>
+  <path d="M88 132L112 164H96L76 136V214H48V100H76V132H88Z" fill="#111111"/>
+  <path d="M208 100L164 214H134L90 100H121L149 177L177 100H208Z" fill="#111111"/>
+</svg>
+</g><text x="1251.33" y="600" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="1095.3333333333335" y="636" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">C · Headset Monogram</text><text x="1095.3333333333335" y="670" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Headset silhouette fused with AV initials</text><text x="1095.3333333333335" y="696" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">for a product-forward symbol.</text></svg>
