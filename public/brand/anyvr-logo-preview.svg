@@ -1,30 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1440" height="1000" viewBox="0 0 1440 1000" role="img" aria-labelledby="preview-title preview-description">
-  <title id="preview-title">AnyVR: one visor, one doorway</title>
-  <desc id="preview-description">Isolated logo proposal in charcoal and off-white. Large mark, reversed mark, exploratory live-type lockup, and actual 24 and 32 pixel mark widths. Not an approved brand identity.</desc>
+  <title id="preview-title">AnyVR logo study</title>
+  <desc id="preview-description">The AnyVR mark in charcoal and off-white: a headset visor with a door standing ajar in its doorway. Large mark, reversed mark, lockup, and actual 24 and 32 pixel widths.</desc>
   <defs>
     <symbol id="visor" viewBox="0 0 224 120">
-      <path d="M38 0 H186 C213 0 224 12 224 38 V82 C224 107 209 120 186 120 C169 120 152 116 140 112 V43 L84 28 V112 C72 116 55 120 38 120 C15 120 0 107 0 82 V38 C0 12 11 0 38 0 Z"/>
+      <path d="M44 2 C84 0 140 0 180 2 C209 4 224 18 224 46 V76 C224 104 208 119 182 119 C166 119 152 116 143.5 112.6 Q140 111.2 140 107.5 V32 Q140 28 136 28 H88 Q84 28 84 32 V107.5 Q84 111.2 80.5 112.6 C72 116 58 119 42 119 C16 119 0 104 0 76 V46 C0 18 15 4 44 2 Z M86.5 33 Q86.5 31 88.4 31.6 L106.1 37.2 Q108 37.8 108 39.8 V102.6 Q108 104.6 106.1 105.2 L88.4 110.6 Q86.5 111.2 86.5 109.2 Z M102.4 71 a3.1 3.1 0 1 0 0.01 0 Z" fill-rule="evenodd"/>
     </symbol>
   </defs>
   <rect width="1440" height="1000" fill="#F5F4F0"/>
   <g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif" fill="#242626">
-    <text x="64" y="70" font-size="28" font-weight="600" letter-spacing="-.6">AnyVR / Mark study</text>
-    <text x="1376" y="68" text-anchor="end" font-size="14" letter-spacing="1.2">ONE SILHOUETTE. ONE OPENING.</text>
+    <text x="64" y="70" font-size="28" font-weight="600" letter-spacing="-.6">AnyVR / Logo study</text>
+    <text x="1376" y="68" text-anchor="end" font-size="14" letter-spacing="1.2">A HEADSET. A DOOR LEFT OPEN.</text>
     <path d="M64 110 H1376" stroke="#242626" stroke-opacity=".18"/>
 
     <use xlink:href="#visor" x="216" y="242" width="448" height="240"/>
-    <text x="64" y="568" font-size="16" font-weight="600">Visor outside. Doorway within.</text>
-    <text x="64" y="595" font-size="15" opacity=".72">An open cut, not a second symbol placed on top.</text>
+    <text x="64" y="568" font-size="16" font-weight="600">Visor outside. A door within.</text>
+    <text x="64" y="595" font-size="15" opacity=".72">The door stands ajar, opening away from you, with a knob to reach for.</text>
 
     <use xlink:href="#visor" x="64" y="659" width="112" height="60"/>
     <text x="201" y="715" font-size="76" font-weight="600" letter-spacing="-2.5">AnyVR</text>
-    <text x="64" y="764" font-size="14" opacity=".72">Lockup exploration only. Live SF/system type; not a final wordmark.</text>
+    <text x="64" y="764" font-size="14" opacity=".72">Lockup with the AnyVR wordmark in the system typeface.</text>
     <path d="M64 809 H880" stroke="#242626" stroke-opacity=".18"/>
     <use xlink:href="#visor" x="64" y="856" width="24" height="12.857143"/>
     <text x="103" y="868" font-size="14">24 px</text>
     <use xlink:href="#visor" x="208" y="854" width="32" height="17.142857"/>
     <text x="255" y="868" font-size="14">32 px</text>
-    <text x="64" y="906" font-size="13" opacity=".72">Actual mark widths at 100% preview. Transparent opening in both SVG masters.</text>
+    <text x="64" y="906" font-size="13" opacity=".72">Actual mark widths at 100% preview. The doorway stays transparent in both SVG masters.</text>
 
     <rect x="960" y="160" width="416" height="649" fill="#242626"/>
     <g fill="#F5F4F0">
@@ -37,9 +37,9 @@
       <text x="1000" y="765" font-size="13" opacity=".75">Off-white #F5F4F0 / Charcoal #242626</text>
     </g>
     <text x="960" y="857" font-size="14" font-weight="600">Single filled contour.</text>
-    <text x="960" y="882" font-size="14" opacity=".72">No strokes, overlays, knobs, or effects.</text>
+    <text x="960" y="882" font-size="14" opacity=".72">No strokes, gradients or effects.</text>
     <path d="M64 942 H1376" stroke="#242626" stroke-opacity=".18"/>
-    <text x="64" y="974" font-size="12" opacity=".7">DESIGN PROPOSAL / Not integrated into the website</text>
-    <text x="1376" y="974" text-anchor="end" font-size="12" opacity=".7">Subject to approval and trademark clearance</text>
+    <text x="64" y="974" font-size="12" opacity=".7">IN USE / Website header, footer and favicon</text>
+    <text x="1376" y="974" text-anchor="end" font-size="12" opacity=".7">Trademark clearance not yet checked</text>
   </g>
 </svg>

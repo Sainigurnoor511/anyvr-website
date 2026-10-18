@@ -19,3 +19,9 @@ Thumbs.db
 
 # Custom
 docs/
+# raw Sketchfab downloads (hundreds of MB); the optimised GLBs in public/models are what ships
+assets-src/
+!.env.example
+
+# early-access sign-ups (personal data)
+/data/
