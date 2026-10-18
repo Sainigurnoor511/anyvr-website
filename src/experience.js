@@ -4,33 +4,73 @@ import { Stage } from './three/stage.js';
 import { createStudio } from './three/studio.js';
 import { clamp, range, smooth } from './three/util.js';
 
-export async function initExperience({ reduced = false, onStatus }) {
+export async function initExperience({ reduced = false, theme = 'dark', onStatus }) {
   const canvas = document.querySelector('#gl');
   const story = document.querySelector('#story');
   const stage = new Stage(canvas, { accent: '#e59a76', maxDpr: 2 });
   const studio = createStudio(stage.renderer, '#e59a76');
   const controllers = { studio };
+  let lightStudio = theme === 'light';
+  studio.setTheme(theme);
   const promises = {};
   const failures = new Set();
   const loaders = {
     lobby: () => import('./three/lobby.js').then((m) => m.createLobby(stage.renderer, '#e59a76')),
     taj: () => import('./three/taj.js').then((m) => m.createTaj(stage.renderer)),
     eiffel: () => import('./three/eiffel.js').then((m) => m.createEiffel(stage.renderer)),
+    valloire: () => import('./three/valloire.js').then((m) => m.createValloire(stage.renderer)),
     giza: () => import('./three/giza.js').then((m) => m.createGiza(stage.renderer)),
   };
   const phases = [
-    { key: 'studio', start: 0, end: .37, name: 'A different perspective' },
-    { key: 'lobby', start: .37, end: .56, name: 'Choose your destination' },
-    { key: 'taj', start: .56, end: .7, name: 'Taj Mahal / India' },
-    { key: 'eiffel', start: .7, end: .84, name: 'Eiffel Tower / France' },
-    { key: 'giza', start: .84, end: 1, name: 'Pyramids of Giza / Egypt' },
+    { key: 'studio', start: 0, end: .264, name: 'A different perspective' },
+    { key: 'lobby', start: .264, end: .4, name: 'Choose your destination' },
+    { key: 'taj', start: .4, end: .55, name: 'Taj Mahal / India' },
+    { key: 'eiffel', start: .55, end: .7, name: 'Eiffel Tower / France' },
+    { key: 'valloire', start: .7, end: .85, name: 'Valloire church / France' },
+    { key: 'giza', start: .85, end: 1, name: 'Pyramids of Giza / Egypt' },
   ];
+  // the studio's choreography was authored on a 0 to .37 timeline
+  const STUDIO_SPAN = .264 / .37;
   const overlays = [...document.querySelectorAll('[data-show]')].map((el) => ({ el, limits: el.dataset.show.split(',').map(Number), alpha: -1 }));
   const pins = [...document.querySelectorAll('[data-pin]')];
   const chapterButtons = [...document.querySelectorAll('[data-chapter]')];
   const phaseLabel = document.querySelector('[data-tour-stage]');
   // a slower lerp and a second, gentler chase on the camera give the cinematic glide
-  const lenis = new Lenis({ smoothWheel: !reduced, lerp: .075, wheelMultiplier: .85, anchors: false, syncTouch: false });
+  const NAV = 68;
+  let sectionTops = [];
+  let gateUntil = 0, gateHard = 0, snapTimer = 0;
+  const absorb = (event) => { if (event.cancelable) event.preventDefault(); return false; };
+  function snapToSection() {
+    if (reduced) return;
+    if (lenis.isScrolling === 'smooth' && Math.abs(lenis.velocity) > .4) { snapTimer = setTimeout(snapToSection, 120); return; }
+    const y = lenis.targetScroll, vh = window.innerHeight;
+    if (y < sectionTops[0] - vh * .5 || y > document.documentElement.scrollHeight - vh * 1.4) return;
+    const near = sectionTops.reduce((best, top) => (Math.abs(top - y) < Math.abs(best - y) ? top : best), Infinity);
+    if (Math.abs(near - y) > 4 && Math.abs(near - y) < vh * .28) lenis.scrollTo(near, { duration: .8 });
+  }
+  // wheel shaping: a soft stop where the tour ends, gentler scrolling and section snapping after it
+  function shapeWheel(data) {
+    if (reduced || !data.event.type.includes('wheel') || !sectionTops.length) return true;
+    if (lenis.targetScroll > storyTop + storyLength * .8) sectionTops = [...document.querySelectorAll('main section[id]:not(#story)')].map((el) => el.getBoundingClientRect().top + window.scrollY - NAV);
+    const now = performance.now(), down = data.deltaY > 0, first = sectionTops[0], y = lenis.targetScroll;
+    if (down && now < gateUntil) {
+      gateUntil = Math.min(gateHard, now + 360);
+      return absorb(data.event);
+    }
+    if (down && y < first - 2 && y > first - window.innerHeight * 1.6 && y + data.deltaY * .85 >= first - 2) {
+      lenis.scrollTo(first, { duration: 1.1 });
+      gateUntil = now + 900;
+      gateHard = now + 4000;
+      return absorb(data.event);
+    }
+    if (y >= first - window.innerHeight * .5) {
+      data.deltaY *= .55;
+      clearTimeout(snapTimer);
+      snapTimer = setTimeout(snapToSection, 220);
+    }
+    return true;
+  }
+  const lenis = new Lenis({ smoothWheel: !reduced, lerp: .075, wheelMultiplier: .85, anchors: false, syncTouch: false, virtualScroll: shapeWheel });
   document.body.classList.add('experience-ready');
   // dev-only handle so browser tests can jump to any story progress
   if (import.meta.env.DEV) window.__anyvr = { lenis, stage, go: (v) => lenis.scrollTo(storyTop + v * storyLength, { immediate: true, force: true }) };
@@ -61,6 +101,7 @@ export async function initExperience({ reduced = false, onStatus }) {
     Object.values(controllers).forEach((controller) => controller.resize(stage.aspect));
     storyTop = story.getBoundingClientRect().top + window.scrollY;
     storyLength = Math.max(1, story.offsetHeight - canvas.clientHeight);
+    sectionTops = [...document.querySelectorAll('main section[id]:not(#story)')].map((el) => el.getBoundingClientRect().top + window.scrollY - NAV);
     dirty = true;
   }
   async function load(key) {
@@ -110,7 +151,7 @@ export async function initExperience({ reduced = false, onStatus }) {
   }
   function updateScene(phase, progress, time) {
     const controller = controllers[phase.key];
-    controller.update(phase.key === 'studio' ? progress : range(progress, phase.start, phase.key === 'giza' ? .97 : phase.end), time, smooth(range(progress, .475, .535)));
+    controller.update(phase.key === 'studio' ? progress / STUDIO_SPAN : range(progress, phase.start, phase.key === 'giza' ? .97 : phase.end), time, smooth(range(progress, .339, .382)));
     if (phase.key !== 'studio' && phase.key !== 'lobby' && !reduced) {
       controller.camera.rotateX(clamp(velocity / 900, -.012, .012));
     }
@@ -150,15 +191,16 @@ export async function initExperience({ reduced = false, onStatus }) {
       const a = updateScene(from, ready ? p : 0, elapsed);
       const b = to ? updateScene(to, p, elapsed) : null;
       const u = stage.uniforms;
-      u.uLensOn.value = !reduced && ready && p >= .37 ? 1 : 0;
-      u.uOpen.value = reduced ? 1 : smooth(range(p, .37, .423)) * (1 - smooth(range(p, .945, .99)));
-      u.uMerge.value = smooth(range(p, .415, .465));
-      const wearing = smooth(range(p, .34, .37)) * (1 - smooth(range(p, .37, .395)));
+      u.uLensOn.value = !reduced && ready && p >= .264 ? 1 : 0;
+      u.uOpen.value = reduced ? 1 : smooth(range(p, .264, .302)) * (1 - smooth(range(p, .945, .99)));
+      u.uMerge.value = smooth(range(p, .296, .332));
+      const wearing = smooth(range(p, .243, .264)) * (1 - smooth(range(p, .264, .282)));
       u.uFade.value = !ready ? .65 : reduced ? 0 : Math.max(wearing, smooth(range(p, .98, 1)));
       u.uWarp.value = 0;
       u.uFlash.value = 0;
       // bloom is for suns and lit iron; on the white headset it would read as a halo
       u.uBloom.value = from.key === 'studio' ? .06 : from.key === 'lobby' ? .25 : .5;
+      u.uVignette.value = from.key === 'studio' && lightStudio ? 0 : .55;
       u.uMotion.value = reduced ? 0 : Math.min(Math.abs(velocity) / 100, .12);
       u.uMotionDir.value.set(0, Math.sign(velocity));
       stage.renderBlend(a.scene, a.camera, a.exposure, b?.scene, b?.camera, b?.exposure, mix);
@@ -169,7 +211,7 @@ export async function initExperience({ reduced = false, onStatus }) {
       if (p < .085 && !reduced) {
         for (const pin of pins) {
           const projected = studio.project(pin.dataset.pin);
-          pin.style.transform = `translate3d(${projected.x * canvas.clientWidth}px, ${projected.y * canvas.clientHeight}px, 0) translate(-50%, -145%)`;
+          pin.style.transform = `translate3d(${projected.x * canvas.clientWidth}px, ${projected.y * canvas.clientHeight}px, 0) translate(-50%, ${pin.dataset.pin === 'valloire' ? '45%' : '-145%'})`;
           pin.classList.toggle('is-visible', projected.visible);
         }
       }
@@ -224,7 +266,7 @@ export async function initExperience({ reduced = false, onStatus }) {
     lenis.scrollTo(initialHash, { immediate: true });
   }
   p = reduced ? 0 : clamp((window.scrollY - storyTop) / storyLength);
-  if (p > .35) { p = 0; }
+  if (p > .25) { p = 0; }
   resume();
   requestAnimationFrame(() => requestAnimationFrame(preload));
   return {
@@ -253,6 +295,11 @@ export async function initExperience({ reduced = false, onStatus }) {
       };
       if (lost) { target.scrollIntoView(); focus(); return; }
       lenis.scrollTo(target, { immediate: reduced, duration: 1.1, onComplete: focus });
+    },
+    setTheme(name) {
+      lightStudio = name === 'light';
+      studio.setTheme(name);
+      dirty = true;
     },
     setReducedMotion(value) {
       if (reduced === value) return;

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { CameraPath, beamMatrix, dotTexture, makeSky, rng, sunLight } from './util.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { pbr, scanned, triplanar } from './textures.js';
+import { loadEiffel } from './eiffel-model.js';
 
 /**
  * The Eiffel Tower as an iron lattice: four legs that curve inward and merge
@@ -200,7 +201,7 @@ function sparkles(count) {
   return new THREE.Points(geo, mat);
 }
 
-export function createEiffel(renderer) {
+export async function createEiffel(renderer) {
   const scene = new THREE.Scene();
   const { sun } = makeSky(renderer, scene, {
     elevation: 1.2, azimuth: 248, turbidity: 9, rayleigh: 3.2, mie: 0.006, mieG: 0.86, clouds: 0.45, envIntensity: 0.55,
@@ -240,7 +241,7 @@ export function createEiffel(renderer) {
   };
   // painted puddle iron: a scanned painted-metal set, tinted Eiffel brown
   triplanar(iron, { scale: 0.6, normalScale: 0.8 });
-  const tower = buildEiffel(iron);
+  const tower = await loadEiffel(iron);
   scene.add(tower.group);
 
   const spark = sparkles(1600);
@@ -294,8 +295,6 @@ export function createEiffel(renderer) {
 
   const r = rng(21), o = new THREE.Object3D();
   const N = 1400;
-  // Haussmann blocks: limestone walls with a window grid drawn in world space,
-  // so every block keeps square windows whatever its size; some are lit at dusk
   const facade = new THREE.MeshStandardMaterial({ color: 0xcfc1a6, roughness: 0.88, emissive: 0xffb36b, emissiveIntensity: 1 });
   facade.onBeforeCompile = (shader) => {
     shader.vertexShader = `varying vec3 vCityPos;

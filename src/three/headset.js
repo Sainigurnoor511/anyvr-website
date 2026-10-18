@@ -207,9 +207,6 @@ export function buildHeadset() {
     g.add(lens, ring);
   }
 
-  // rigid side arms, then fabric straps that wrap round the back of the head.
-  // The straps live in a harness pivoting at the arms, so they can be flipped
-  // up out of the way as the headset comes to the eyes.
   const harness = new THREE.Group();
   harness.position.set(0, 0, -0.75);
   const hb = (...args) => { const m = band(...args); m.position.z += 0.75; harness.add(m); return m; };

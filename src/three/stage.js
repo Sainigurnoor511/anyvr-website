@@ -28,6 +28,7 @@ uniform float uFade;    // fade to black
 uniform float uMotion;  // scroll velocity motion blur strength
 uniform vec2 uMotionDir;
 uniform vec3 uAccent;
+uniform float uVignette;
 uniform sampler2D tBloom;
 uniform float uBloom;
 varying vec2 vUv;
@@ -98,7 +99,7 @@ void main() {
   col += texture2D(tBloom, vUv).rgb * uBloom * (uLensOn > 0.5 ? smoothstep(0.0, 1.0, uOpen) : 1.0);
   col = mix(col, vec3(3.0), uFlash);
   vec2 q = vUv - 0.5;
-  col *= 1.0 - dot(q, q) * 0.55;
+  col *= 1.0 - dot(q, q) * uVignette;
   col *= 1.0 - uFade;
   gl_FragColor = vec4(max(col, 0.0), 1.0);
   #include <tonemapping_fragment>
@@ -122,10 +123,10 @@ uniform float uExpB;
 uniform float uThreshold;
 varying vec2 vUv;
 vec3 tap(vec2 uv) {
-  if (uFirst < 0.5) return texture2D(tSrc, uv).rgb;
-  vec3 c = mix(texture2D(tSrc, uv).rgb * uExpA, texture2D(tSrcB, uv).rgb * uExpB, uMix);
-  float l = max(c.r, max(c.g, c.b));
-  return c * smoothstep(uThreshold, uThreshold * 2.2, l);
+  vec3 plain = texture2D(tSrc, uv).rgb;
+  vec3 mixed = mix(plain * uExpA, texture2D(tSrcB, uv).rgb * uExpB, uMix);
+  float l = max(mixed.r, max(mixed.g, mixed.b));
+  return mix(plain, mixed * smoothstep(uThreshold, uThreshold * 2.2, l), step(0.5, uFirst));
 }
 void main() {
   vec2 h = uTexel * 0.5;
@@ -188,6 +189,7 @@ export class Stage {
       uMotionDir: { value: new THREE.Vector2(0, 1) },
       uTime: { value: 0 },
       uAccent: { value: new THREE.Color(accent) },
+      uVignette: { value: 0.55 },
     };
     const bloomOptions = { type: THREE.HalfFloatType, colorSpace: THREE.LinearSRGBColorSpace, depthBuffer: false };
     this.down = Array.from({ length: 5 }, () => new THREE.WebGLRenderTarget(1, 1, bloomOptions));

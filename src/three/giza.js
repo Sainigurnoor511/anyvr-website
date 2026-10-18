@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { CameraPath, dotTexture, makeSky, rng, sunLight, valueNoise } from './util.js';
 import { mergeGeometries, mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { scanned } from './textures.js';
+import { placeScan } from './scans.js';
 
 /**
  * Giza plateau in the afternoon: Khufu, Khafre (still wearing a cap of its
@@ -170,7 +171,7 @@ function sandDrift(count) {
   return new THREE.Points(geo, mat);
 }
 
-export function createGiza(renderer) {
+export async function createGiza(renderer) {
   const scene = new THREE.Scene();
   const { sun } = makeSky(renderer, scene, {
     elevation: 18, azimuth: 125, turbidity: 7, rayleigh: 1.3, mie: 0.006, mieG: 0.8, clouds: 0.08, envIntensity: 0.45,
@@ -191,25 +192,47 @@ export function createGiza(renderer) {
   const stone = scanned('old_sandstone_02', { color: 0xfff1df, roughness: 1, vertexColors: true }, { scale: 0.32, macro: 0.35, normalScale: 1.3, saturation: 0.55, gain: 1.25 });
   const casing = scanned('sandstone_cracks', { color: 0xfff1dd, roughness: 0.9 }, { scale: 0.2, normalScale: 0.6 });
 
-  const khufu = pyramid(230, 146, stone);
-  const khafre = new THREE.Group();
-  khafre.add(pyramid(215, 136 * 0.8, stone, 215 * 0.2));
-  const cap = pyramid(215 * 0.2, 136 * 0.2, casing, 0, false);
-  cap.position.y = 136 * 0.8;
-  khafre.add(cap);
-  khafre.position.set(-300, 10, -330);
-  const menkaure = pyramid(103, 65, stone);
-  menkaure.position.set(-520, 0, -660);
-  scene.add(khufu, khafre, menkaure);
-  for (const z of [-70, 0, 70]) {
-    const q = pyramid(46, 29, stone);
-    q.position.set(175, 0, z);
-    scene.add(q);
-  }
-  for (const x of [-430, -470, -510]) {
-    const q = pyramid(40, 22, stone);
-    q.position.set(x, 0, -770);
-    scene.add(q);
+  const MENKAURE = '/models/menkaure.glb';
+  const scanAt = async (height, x, y, z, turn) => {
+    const placed = await placeScan(MENKAURE, { height, turn });
+    if (!placed) return null;
+    placed.group.position.set(x, y, z);
+    scene.add(placed.group);
+    return placed.group;
+  };
+  const scanned3 = await Promise.all([
+    scanAt(146, 0, 0, 0, Math.PI),
+    scanAt(136, -300, 10, -330, Math.PI / 2),
+    scanAt(65, -520, 0, -660, 0),
+  ]);
+  if (scanned3.every(Boolean)) {
+    await Promise.all([
+      ...[-70, 0, 70].map((z, i) => scanAt(29, 175, 0, z, i * 1.3 + 0.6)),
+      ...[-430, -470, -510].map((x, i) => scanAt(22, x, 0, -770, i * 0.9 + 2.1)),
+    ]);
+  } else {
+    // procedural fallback when the scan is missing
+    scanned3.forEach((g) => g && scene.remove(g));
+    const khufu = pyramid(230, 146, stone);
+    const khafre = new THREE.Group();
+    khafre.add(pyramid(215, 136 * 0.8, stone, 215 * 0.2));
+    const cap = pyramid(215 * 0.2, 136 * 0.2, casing, 0, false);
+    cap.position.y = 136 * 0.8;
+    khafre.add(cap);
+    khafre.position.set(-300, 10, -330);
+    const menkaure = pyramid(103, 65, stone);
+    menkaure.position.set(-520, 0, -660);
+    scene.add(khufu, khafre, menkaure);
+    for (const z of [-70, 0, 70]) {
+      const q = pyramid(46, 29, stone);
+      q.position.set(175, 0, z);
+      scene.add(q);
+    }
+    for (const x of [-430, -470, -510]) {
+      const q = pyramid(40, 22, stone);
+      q.position.set(x, 0, -770);
+      scene.add(q);
+    }
   }
   const sph = sphinx(scanned('sandstone_cracks', { color: 0xf3d6b0, roughness: 1 }, { scale: 0.18, normalScale: 1.5 }));
   sph.position.set(160, 0, 230);

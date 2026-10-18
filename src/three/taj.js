@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { CameraPath, makeSky, onionDome, rng, sunLight } from './util.js';
 import { scanned } from './textures.js';
+import { loadTaj } from './taj-model.js';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 /**
@@ -305,7 +306,7 @@ function sideHall(mats, red) {
   return g;
 }
 
-export function createTaj(renderer) {
+export async function createTaj(renderer) {
   const scene = new THREE.Scene();
   const { sun } = makeSky(renderer, scene, {
     elevation: 7, azimuth: 35, turbidity: 5, rayleigh: 2.2, mie: 0.004, mieG: 0.82, clouds: 0.22, envIntensity: 0.7,
@@ -324,7 +325,7 @@ export function createTaj(renderer) {
   const red = scanned('red_sandstone_wall', { color: 0xd9a08a, roughness: 1 }, { scale: 0.3 });
   mats.recessRed = new THREE.MeshStandardMaterial({ color: 0x5e2c1f, roughness: 0.9, side: THREE.DoubleSide });
 
-  const taj = buildTaj(mats);
+  const { group: taj } = await loadTaj(mats);
   taj.position.y = 1.2;
   scene.add(taj);
 
@@ -416,8 +417,6 @@ export function createTaj(renderer) {
     }
   }
   scene.add(cypress, trees);
-  // the pool re-renders the scene for its reflection; leaving the ~3,000 leaf
-  // clusters out of that pass costs little visually and keeps the frame rate
   const reflect = pool.onBeforeRender;
   pool.onBeforeRender = (...args) => {
     cypress.visible = trees.visible = false;

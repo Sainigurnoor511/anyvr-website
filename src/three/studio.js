@@ -6,6 +6,7 @@ import { dotTexture, easeIn, easeInOut, easeOut, lerp, range, rng } from './util
 const PLACES = {
   agra: { lat: 27.17, lon: 78.04 },
   paris: { lat: 48.86, lon: 2.29 },
+  valloire: { lat: 45.17, lon: 6.43 },
   giza: { lat: 29.98, lon: 31.13 },
 };
 
@@ -40,6 +41,9 @@ function buildGlobe(accent) {
     new THREE.SphereGeometry(R * 0.985, 48, 32),
     new THREE.MeshBasicMaterial({ color: 0x0a0b0e, transparent: true, opacity: 0.82 }),
   );
+  // the core hides the far side, so it must draw before anything on the near side
+  core.renderOrder = 1;
+  grid.renderOrder = 2;
   g.add(core);
 
   const pinMat = new THREE.MeshBasicMaterial({ color: accent, transparent: true });
@@ -47,13 +51,14 @@ function buildGlobe(accent) {
   for (const [k, p] of Object.entries(PLACES)) {
     const m = new THREE.Mesh(new THREE.SphereGeometry(0.028, 16, 12), pinMat);
     m.position.copy(latLon(p.lat, p.lon, R * 1.005));
+    m.renderOrder = 2;
     g.add(m);
     pins[k] = m;
   }
 
   const arcMat = new THREE.LineDashedMaterial({ color: accent, dashSize: 0.06, gapSize: 0.05, transparent: true, opacity: 0.9 });
   const arcs = [];
-  for (const [from, to] of [['agra', 'paris'], ['paris', 'giza'], ['giza', 'agra']]) {
+  for (const [from, to] of [['agra', 'paris'], ['paris', 'valloire'], ['valloire', 'giza'], ['giza', 'agra']]) {
     const a = pins[from].position.clone().normalize(), b = pins[to].position.clone().normalize();
     const ang = a.angleTo(b);
     const line = [];
@@ -63,15 +68,44 @@ function buildGlobe(accent) {
       line.push(v.multiplyScalar(R * (1.005 + Math.sin(Math.PI * t) * (0.03 + ang * 0.1))));
     }
     const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(line), arcMat);
+    l.renderOrder = 2;
     l.computeLineDistances();
     g.add(l);
     arcs.push(l);
   }
   // face the Mediterranean-to-India band toward the camera
-  g.rotation.y = THREE.MathUtils.degToRad(-130);
   g.rotation.x = 0.32;
   return { group: g, grid, core, pins, arcMat, pinMat };
 }
+
+/** three.js's ACES filmic curve (exposure 1), so a background can be solved to land on the page colour. */
+function aces(c) {
+  const v = [c[0] / 0.6, c[1] / 0.6, c[2] / 0.6];
+  const i = [
+    0.59719 * v[0] + 0.35458 * v[1] + 0.04823 * v[2],
+    0.076 * v[0] + 0.90834 * v[1] + 0.01566 * v[2],
+    0.0284 * v[0] + 0.13383 * v[1] + 0.83777 * v[2],
+  ];
+  const f = i.map((x) => (x * (x + 0.0245786) - 0.000090537) / (x * (0.983729 * x + 0.432951) + 0.238081));
+  return [
+    1.60475 * f[0] - 0.53108 * f[1] - 0.07367 * f[2],
+    -0.10208 * f[0] + 1.10813 * f[1] - 0.00605 * f[2],
+    -0.00327 * f[0] - 0.07276 * f[1] + 1.07602 * f[2],
+  ].map((x) => Math.min(1, Math.max(0, x)));
+}
+function untoneMapped(hex) {
+  const want = new THREE.Color(hex).toArray();
+  const x = [...want];
+  for (let n = 0; n < 40; n++) {
+    const got = aces(x);
+    for (let k = 0; k < 3; k++) x[k] *= Math.min(1.6, Math.max(0.6, want[k] / Math.max(got[k], 1e-4)));
+  }
+  return new THREE.Color(...x);
+}
+const THEMES = {
+  dark: { bg: new THREE.Color(0x0a0b0e), grid: 0x8a8f9c, gridOpacity: 0.22, dust: 0.16, arc: 0xe59a76, arcOpacity: 0.9, land: 0xd7dbe4, landOpacity: 0.75, landSize: 0.03 },
+  light: { bg: untoneMapped(0xf6f5f2), grid: 0xb9bac0, gridOpacity: 1, dust: 0.05, arc: 0xb0461f, arcOpacity: 1, land: 0x4a4b53, landOpacity: 1, landSize: 0.05 },
+};
 
 export function createStudio(renderer, accent) {
   const scene = new THREE.Scene();
@@ -101,6 +135,17 @@ export function createStudio(renderer, accent) {
 
   const globe = buildGlobe(accent);
   scene.add(globe.group);
+  // continents as a grid of square pixels, sampled from Natural Earth by scripts/land-dots.mjs
+  const landMat = new THREE.PointsMaterial({ size: 0.03, color: 0xd7dbe4, transparent: true, opacity: 0.75, depthWrite: false });
+  fetch('/data/land-dots.json').then((r) => r.json()).then((dots) => {
+    const pos = new Float32Array(dots.length * 3);
+    dots.forEach(([lat, lon], i) => latLon(lat, lon, 2.012).toArray(pos, i * 3));
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const land = new THREE.Points(geo, landMat);
+    land.renderOrder = 2;
+    globe.group.add(land);
+  }).catch(() => {});
 
   // ambient dust in the light
   const r = rng(3), N = 420, pos = new Float32Array(N * 3);
@@ -117,10 +162,30 @@ export function createStudio(renderer, accent) {
   const _v = new THREE.Vector3();
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let narrow = false;
+  // the places' mean longitude; turning the globe by -(lon + 90 deg) brings a longitude to face the camera
+  const lons = Object.values(PLACES).map((p) => THREE.MathUtils.degToRad(p.lon));
+  const centre = Math.atan2(lons.reduce((a, l) => a + Math.sin(l), 0), lons.reduce((a, l) => a + Math.cos(l), 0));
+  const facingCentre = -centre - Math.PI / 2;
+  let spin = 0, lastTime = 0;
 
+  let gridOpacity = THEMES.dark.gridOpacity, dustOpacity = THEMES.dark.dust, landOpacity = THEMES.dark.landOpacity, arcOpacity = THEMES.dark.arcOpacity;
   return {
     scene, camera, exposure: 1,
     pins: globe.pins,
+    setTheme(name) {
+      const t = THEMES[name] || THEMES.dark;
+      scene.background.copy(t.bg);
+      globe.core.material.color.copy(t.bg);
+      globe.grid.material.color.set(t.grid);
+      globe.arcMat.color.set(t.arc);
+      landMat.color.set(t.land);
+      landMat.size = t.landSize;
+      landOpacity = t.landOpacity;
+      arcOpacity = t.arcOpacity;
+      globe.pinMat.color.set(t.arc);
+      gridOpacity = t.gridOpacity;
+      dustOpacity = t.dust;
+    },
     resize(aspect) {
       camera.aspect = aspect;
       narrow = aspect < 0.9;
@@ -131,14 +196,23 @@ export function createStudio(renderer, accent) {
     update(p, time) {
       // globe: sits right of the hero copy, then recedes as the headset arrives
       const out = easeIn(range(p, 0.02, 0.12));
-      const gx = narrow ? 0.08 : 1.7;
+      const gx = narrow ? 0.08 : 1.42;
       globe.group.scale.setScalar(narrow ? 0.48 : 0.68);
       globe.group.position.set(lerp(gx, gx + 2.5, out), lerp(narrow ? -1.45 : -0.02, -0.6, out), lerp(0, -7, out));
-      globe.group.rotation.y = THREE.MathUtils.degToRad(-130) + (reducedMotion.matches ? 0 : time * 0.12);
+      // drift slowly while the places face the viewer, hurry through the empty far side
+      const dt = Math.min(0.1, Math.max(0, time - lastTime));
+      lastTime = time;
+      if (!reducedMotion.matches) {
+        const away = Math.abs(Math.atan2(Math.sin(spin), Math.cos(spin)));
+        const hurry = THREE.MathUtils.smoothstep(away, THREE.MathUtils.degToRad(55), THREE.MathUtils.degToRad(105));
+        spin += dt * THREE.MathUtils.lerp(0.14, 1.6, hurry);
+      }
+      globe.group.rotation.y = facingCentre + spin;
       const fade = 1 - out;
-      globe.grid.material.opacity = 0.22 * fade;
+      globe.grid.material.opacity = gridOpacity * fade;
+      landMat.opacity = landOpacity * fade;
       globe.core.material.opacity = 0.82 * fade;
-      globe.arcMat.opacity = 0.9 * fade;
+      globe.arcMat.opacity = arcOpacity * fade;
       globe.pinMat.opacity = fade;
       globe.arcMat.dashOffset = -time * 0.12;
       globe.group.visible = fade > 0.001;
@@ -167,6 +241,7 @@ export function createStudio(renderer, accent) {
       headset.userData.harness.rotation.x = lerp(0, 1.45, easeInOut(range(p, 0.235, 0.31)));
 
 
+      dust.material.opacity = dustOpacity;
       dust.rotation.y = time * 0.01;
       dust.position.y = Math.sin(time * 0.2) * 0.1;
     },
